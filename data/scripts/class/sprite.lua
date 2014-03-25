@@ -34,13 +34,13 @@ function Sprite:quadY()
 end
 
 function Sprite:realZoomX()
-    local result = self.zoom_x * oppai.scale
+    local result = self.zoom_x
     if self.mirror then result = result * -1 end
     return result
 end
 
 function Sprite:realZoomY()
-    return self.zoom_y * oppai.scale
+    return self.zoom_y
 end
 
 function Sprite:draw()

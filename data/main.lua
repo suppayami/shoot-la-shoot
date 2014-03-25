@@ -10,3 +10,10 @@ require 'scripts/class/cache'
 require 'scripts/class/layermanager'
 require 'scripts/class/sprite'
 require 'scripts/class/model'
+
+-- game class
+require 'scripts/class/input'
+require 'scripts/class/player'
+
+-- testing purpose
+require 'scripts/test/player'
