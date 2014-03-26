@@ -1,8 +1,9 @@
 Player = class(Model)
+Player.modelInit   = Player.super.init
 Player.modelUpdate = Player.super.update
 
 function Player:init(x, y)
-    self.super:init()
+    self:modelInit()
     -- init position
     self.x = x
     self.y = y

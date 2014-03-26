@@ -3,9 +3,16 @@ Model = class(Object)
 function Model:init()
     self.x = 0
     self.y = 0
-    self.width  = 0
-    self.height = 0
-    self.sprite = nil
+    self.width   = 0
+    self.height  = 0
+    self.sprite  = nil
+    self.destroy = false
+    --
+    self:initParams()
+end
+
+function Model:initParams()
+    -- none
 end
 
 function Model:moveRateX()
@@ -29,6 +36,7 @@ end
 
 function Model:update()
     self:updateSprite()
+    self:updateCollide()
 end
 
 function Model:updateSprite()
@@ -40,6 +48,10 @@ function Model:updateSpritePosition()
     local sprite = self.sprite
     sprite.x = self.x + (self.width - sprite:width()) / 2
     sprite.y = self.y + (self.height - sprite:height()) / 2
+end
+
+function Model:updateCollide()
+    -- none
 end
 
 function Model:collided(model)
@@ -57,4 +69,12 @@ function Model:collided(model)
     if oy < h then colY = true end
 
     return (colX and colY)
+end
+
+function Model:destroy()
+    self.destroy = true
+end
+
+function Model:destroyed()
+    return self.destroy
 end
