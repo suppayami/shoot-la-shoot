@@ -1,33 +1,28 @@
-Enemy = class(Model)
-Enemy.modelInit          = Enemy.super.init
-Enemy.modelUpdateCollide = Enemy.super.updateCollide
-
-function Enemy:init(x, y)
-    self:modelInit()
-    -- init position
-    self.x = x
-    self.y = y
-end
-
-function Enemy:initParams()
-    self.hp = 1
-end
+Enemy = class(Character)
+Enemy.characterUpdateCollide = Enemy.super.updateCollide
 
 function Enemy:updateCollide()
-    self:modelUpdateCollide()
+    self:characterUpdateCollide()
     --
     self:updateCollidePlayer()
     self:updateCollideBullet()
 end
 
 function Enemy:updateCollidePlayer()
-    
+    local playerCharacter = ModelManager:getModel('playerCharacter')
+    for k,v in pairs(playerCharacter) do
+        if self:collided(v) then
+            self:applyDamage(self.hp, true)
+        end
+    end
 end
 
 function Enemy:updateCollideBullet()
-    for k,v in pairs(ModelManager:getModel('playerBullet')) do
+    local playerBullter = ModelManager:getModel('playerBullet')
+    for k,v in pairs(playerBullter) do
         if self:collided(v) then
             v:destroy()
+            self:applyDamage(v:getDamage())
         end
     end
 end

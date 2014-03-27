@@ -24,6 +24,7 @@ function Input:update()
 end
 
 function Input:resetKey()
+    self.fire  = false
     self.up    = false
     self.down  = false
     self.left  = false

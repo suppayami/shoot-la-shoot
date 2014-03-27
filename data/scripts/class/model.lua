@@ -1,18 +1,36 @@
 Model = class(Object)
 
-function Model:init()
-    self.x = 0
-    self.y = 0
-    self.width   = 0
-    self.height  = 0
-    self.sprite  = nil
-    self.destroy = false
+function Model:init(x, y)
+    self.x = x
+    self.y = y
+    self.width     = 0
+    self.height    = 0
+    self.sprite    = nil
+    self.destroyed = false
     --
-    self:initParams()
+    self.shoot     = 0 -- shoot delay
+    self:initSprite()  -- init sprite for model
 end
 
-function Model:initParams()
-    -- none
+function Model:initSprite()
+    local layer  = self:spriteLayer()
+    local name   = self:spriteName()
+    local class  = self:spriteClass()
+    local sprite = LayerManager:addSprite(layer, name, class)
+
+    self:setSprite(sprite)
+end
+
+function Model:spriteClass()
+    return Sprite
+end
+
+function Model:spriteLayer()
+    return "layer_name"
+end
+
+function Model:spriteName()
+    return "sprite_name"
 end
 
 function Model:moveRateX()
@@ -37,6 +55,7 @@ end
 function Model:update()
     self:updateSprite()
     self:updateCollide()
+    self:updateMove()
 end
 
 function Model:updateSprite()
@@ -52,6 +71,11 @@ end
 
 function Model:updateCollide()
     -- none
+end
+
+function Model:updateMove()
+    self.x = self.x + self:moveRateX()
+    self.y = self.y + self:moveRateY()
 end
 
 function Model:collided(model)
@@ -72,9 +96,7 @@ function Model:collided(model)
 end
 
 function Model:destroy()
-    self.destroy = true
-end
-
-function Model:destroyed()
-    return self.destroy
+    self.destroyed = true
+    self.sprite:dispose()
+    self.sprite    = nil
 end

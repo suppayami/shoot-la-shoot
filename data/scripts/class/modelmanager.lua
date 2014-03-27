@@ -15,7 +15,7 @@ function ModelManager:getModel(type)
     --
     local result = {}
     for k,v in pairs(self.types[type]) do
-        if not v:destroyed() then result[#result + 1] = v end
+        if not v.destroyed then result[#result + 1] = v end
     end
     return result
 end
@@ -28,7 +28,7 @@ end
 function ModelManager:garbageCollect()
     for k,v in pairs(self.types) do
         for i,m in pairs(v) do
-            if m:destroyed() then v[i] = nil end
+            if m.destroyed then v[i] = nil end
         end
     end
 end

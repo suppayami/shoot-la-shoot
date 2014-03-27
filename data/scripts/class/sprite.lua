@@ -11,6 +11,14 @@ function Sprite:init()
     self.blendMode = "alpha"
     self.shader = nil
     self.mirror = false
+    self.layer  = "" -- for remove in layer manager
+    self.name   = "" -- for remove in layer manager
+    --
+    self:initImage()
+end
+
+function Sprite:initImage()
+    -- none
 end
 
 function Sprite:width()
@@ -80,4 +88,8 @@ function Sprite:setQuad(x, y, w, h)
     if not w then w = self:width() end
     if not h then h = self:height() end
     self.quad:setViewport(x, y, w, h)
+end
+
+function Sprite:dispose()
+    LayerManager:removeSprite(self.layer, self.name)
 end
