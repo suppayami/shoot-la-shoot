@@ -13,8 +13,7 @@ function BulletRyukoN:spriteLayer()
 end
 
 function BulletRyukoN:spriteName()
-    local count = LayerManager:getSpriteCount(self:spriteLayer())
-    return "bullet_ryuko_n_"..(count + 1)..os.clock()..randomNumber:random(1, 1000)
+    return "bullet_ryuko_n"
 end
 
 function BulletRyukoN:moveRateX()

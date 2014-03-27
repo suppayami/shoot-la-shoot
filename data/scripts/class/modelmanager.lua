@@ -7,6 +7,7 @@ function ModelManager:addModel(type, modelName, modelClass, ...)
     --
     local t = self.types[type]
     local model = modelClass:new(...)
+    if t[modelName] then modelName = modelName..tostring(model) end
     t[modelName] = model
     return t[modelName]
 end

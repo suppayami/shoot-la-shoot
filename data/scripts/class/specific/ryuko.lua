@@ -36,6 +36,10 @@ function Ryuko:bulletType()
     return "playerBullet"
 end
 
+function Ryuko:bulletName()
+    return "ryuko_bullet_n"
+end
+
 function Ryuko:actionShoot()
     local imageCache = self:bulletSpriteClass():imageCache()
     local x1 = self.x

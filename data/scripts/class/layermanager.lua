@@ -35,8 +35,9 @@ function LayerManager:addSprite(layer, spriteName, spriteClass, ...)
     if self.layer[layer] == nil then self.layer[layer] = {} end
     --
     local l = self.layer[layer]
-    if l[spriteName] then l[spriteName]:unsetImage() end
-    l[spriteName]       = spriteClass:new(...)
+    local sprite = spriteClass:new(...)
+    if l[spriteName] then spriteName = spriteName..tostring(sprite) end
+    l[spriteName]       = sprite
     l[spriteName].layer = layer
     l[spriteName].name  = spriteName
     self.sort[layer]    = sortFunc.sortTable(l, function (a,b) return a.z < b.z end)
@@ -75,6 +76,7 @@ function LayerManager:updateAll(dt)
 end
 
 function LayerManager:getSprite(layer, spriteName)
+    if self.layer[layer] == nil then self.layer[layer] = {} end
     return self.layer[layer][spriteName]
 end
 

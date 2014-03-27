@@ -49,8 +49,7 @@ function Character:bulletType()
 end
 
 function Character:bulletName()
-    local count = ModelManager:getModelCount(self:bulletType())
-    return "bullet_"..(count + 1)..os.clock()..randomNumber:random(1, 1000)
+    return "bullet"
 end
 
 function Character:actionShoot()
