@@ -82,3 +82,12 @@ function LayerManager:getSprites(layer)
     if self.layer[layer] == nil then self.layer[layer] = {} end
     return self.layer[layer]
 end
+
+function LayerManager:getSpriteCount(layer)
+    if self.layer[layer] == nil then self.layer[layer] = {} end
+    local result = 0
+    for k,v in pairs(self.layer[layer]) do
+        result = result + 1
+    end
+    return result
+end

@@ -1,14 +1,20 @@
 Bullet = class(Model)
-Bullet.modelInit   = Bullet.super.init
-Bullet.modelUpdate = Bullet.super.update
-
-function Bullet:init(x, y)
-    self:modelInit()
-    -- init position
-    self.x = x
-    self.y = y
-end
 
 function Bullet:getDamage()
     return 1
+end
+
+function Bullet:updateAutoDestroy()
+    if self.x > love.window.getWidth() + 16 then
+        self:destroy()
+    end
+    if self.y > love.window.getHeight() + 16 then
+        self:destroy()
+    end
+    if self.x < - self.width - 16 then
+        self:destroy()
+    end
+    if self.y < - self.height - 16 then
+        self:destroy()
+    end
 end

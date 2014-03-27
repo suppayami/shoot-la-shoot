@@ -1,6 +1,10 @@
 Enemy = class(Character)
 Enemy.characterUpdateCollide = Enemy.super.updateCollide
 
+function Enemy:bulletType()
+    return "enemyBullet"
+end
+
 function Enemy:updateCollide()
     self:characterUpdateCollide()
     --
@@ -24,5 +28,21 @@ function Enemy:updateCollideBullet()
             v:destroy()
             self:applyDamage(v:getDamage())
         end
+    end
+end
+
+function Enemy:updateAutoDestroy()
+    -- none
+    if self.x > love.window.getWidth() + 16 then
+        self:destroy()
+    end
+    if self.y > love.window.getHeight() then
+        self:destroy()
+    end
+    if self.x < - self.width - 16 then
+        self:destroy()
+    end
+    if self.y < - self.height - 16 then
+        self:destroy()
     end
 end

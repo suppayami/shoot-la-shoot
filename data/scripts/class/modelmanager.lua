@@ -6,7 +6,8 @@ function ModelManager:addModel(type, modelName, modelClass, ...)
     if self.types[type] == nil then self.types[type] = {} end
     --
     local t = self.types[type]
-    t[modelName] = modelClass:new(...)
+    local model = modelClass:new(...)
+    t[modelName] = model
     return t[modelName]
 end
 
@@ -16,6 +17,15 @@ function ModelManager:getModel(type)
     local result = {}
     for k,v in pairs(self.types[type]) do
         if not v.destroyed then result[#result + 1] = v end
+    end
+    return result
+end
+
+function ModelManager:getModelCount(type)
+    if self.types[type] == nil then self.types[type] = {} end
+    local result = 0
+    for k,v in pairs(self.types[type]) do
+        result = result + 1
     end
     return result
 end

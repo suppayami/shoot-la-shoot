@@ -1,5 +1,9 @@
 EnemyA = class(Enemy)
 
+function EnemyA:initParams()
+    self.hp = 3
+end
+
 function EnemyA:spriteClass()
     return SpriteEnemyA
 end
@@ -9,8 +13,8 @@ function EnemyA:spriteLayer()
 end
 
 function EnemyA:spriteName()
-    local layer = LayerManager:getSprites(self:spriteLayer())
-    return "enemyA_"..(#layer + 1)
+    local count = LayerManager:getSpriteCount(self:spriteLayer())
+    return "enemyA_"..(count + 1)..os.clock()..randomNumber:random(1, 1000)
 end
 
 function EnemyA:shootDelay()

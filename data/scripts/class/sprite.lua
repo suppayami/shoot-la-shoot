@@ -21,6 +21,10 @@ function Sprite:initImage()
     -- none
 end
 
+function Sprite:imageCache()
+    -- none
+end
+
 function Sprite:width()
     local x, y, w, h = self.quad:getViewport()
     return w * math.abs(self:realZoomX())

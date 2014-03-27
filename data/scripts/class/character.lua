@@ -44,8 +44,27 @@ function Character:bulletClass()
     return Bullet -- bullet class
 end
 
+function Character:bulletType()
+    return "bullet"
+end
+
+function Character:bulletName()
+    local count = ModelManager:getModelCount(self:bulletType())
+    return "bullet_"..(count + 1)..os.clock()..randomNumber:random(1, 1000)
+end
+
 function Character:actionShoot()
     -- none
+end
+
+function Character:createBullet(x, y)
+    local typen = self:bulletType()
+    local name  = self:bulletName()
+    local class = self:bulletClass()
+
+    local model = ModelManager:addModel(typen, name, class, x, y)
+
+    return model
 end
 
 function Character:update()

@@ -56,6 +56,7 @@ function Model:update()
     self:updateSprite()
     self:updateCollide()
     self:updateMove()
+    self:updateAutoDestroy()
 end
 
 function Model:updateSprite()
@@ -78,6 +79,10 @@ function Model:updateMove()
     self.y = self.y + self:moveRateY()
 end
 
+function Model:updateAutoDestroy()
+    -- none
+end
+
 function Model:collided(model)
     local x1, x2 = self.x + self.width / 2, model.x + model.width / 2
     local y1, y2 = self.y + self.height / 2, model.y + model.height / 2
@@ -96,6 +101,7 @@ function Model:collided(model)
 end
 
 function Model:destroy()
+    if self.destroyed then return end
     self.destroyed = true
     self.sprite:dispose()
     self.sprite    = nil

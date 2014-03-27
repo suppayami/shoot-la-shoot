@@ -1,6 +1,10 @@
 Player = class(Character)
 Player.characterShootCondition = Player.super.shootCondition
 
+function Player:bulletType()
+    return "playerBullet"
+end
+
 function Player:updateMove()
     -- move by input
     self.x = self.x + self:moveRateX() * Input.axisX

@@ -14,13 +14,18 @@ require 'scripts/class/model'
 require 'scripts/class/input'
 
 -- game class
-require 'scripts/class/sprite_ryuko'
-require 'scripts/class/sprite_enemy_a'
 require 'scripts/class/character'
 require 'scripts/class/player'
 require 'scripts/class/enemy'
-require 'scripts/class/ryuko'
-require 'scripts/class/enemy_a'
+require 'scripts/class/bullet'
+
+-- specific class
+require 'scripts/class/specific/sprite_ryuko'
+require 'scripts/class/specific/sprite_enemy_a'
+require 'scripts/class/specific/sprite_bullet_ryuko_n'
+require 'scripts/class/specific/ryuko'
+require 'scripts/class/specific/enemy_a'
+require 'scripts/class/specific/bullet_ryuko_n'
 
 -- testing purpose
 require 'scripts/test/player'
