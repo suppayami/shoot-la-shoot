@@ -5,6 +5,9 @@ Character.modelUpdate = Character.super.update
 function Character:init(x, y)
     self:modelInit(x, y)
     self:initParams()
+    -- shooting
+    self.shoot  = 0 -- shoot delay
+    self.attack = false -- special shoot
 end
 
 function Character:initParams()
@@ -40,8 +43,17 @@ function Character:shootCondition()
     return cond
 end
 
+function Character:attackCondition()
+    local cond = self.attack
+    return cond
+end
+
 function Character:bulletClass()
     return Bullet -- bullet class
+end
+
+function Character:bulletSpriteClass()
+    return self:bulletClass():spriteClass() -- bullet class
 end
 
 function Character:bulletType()
@@ -53,6 +65,12 @@ function Character:bulletName()
 end
 
 function Character:actionShoot()
+    -- for normal shoot
+    -- none
+end
+
+function Character:actionAttack()
+    -- for special shoot
     -- none
 end
 
@@ -68,7 +86,8 @@ end
 
 function Character:update()
     self:modelUpdate()
-    self:updateShoot()
+    self:updateShoot()  -- for shooting delay
+    self:updateAttack() -- for shooting skill
 end
 
 function Character:updateShoot()
@@ -76,4 +95,9 @@ function Character:updateShoot()
     if not self:shootCondition() then return end -- condition
     self.shoot = self:shootDelay()
     self:actionShoot()
+end
+
+function Character:updateAttack()
+    if not self:attackCondition() then return end -- condition
+    self:actionAttack()
 end

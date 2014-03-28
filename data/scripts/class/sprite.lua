@@ -57,10 +57,10 @@ end
 
 function Sprite:draw()
     if self.image then
-        if self.x > love.window.getWidth()
-            or self.x + self:width() < 0
-            or self.y > love.window.getHeight()
-            or self.y + self:height() < 0 then
+        if self.x - self.ox > love.window.getWidth()
+            or self.x + self:width() - self.ox < 0
+            or self.y - self.oy > love.window.getHeight()
+            or self.y + self:height() - self.oy < 0 then
             return false
         end
         love.graphics.setShader(self.shader)

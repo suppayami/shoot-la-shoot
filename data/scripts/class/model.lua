@@ -8,7 +8,6 @@ function Model:init(x, y)
     self.sprite    = nil
     self.destroyed = false
     --
-    self.shoot     = 0 -- shoot delay
     self:initSprite()  -- init sprite for model
 end
 
@@ -17,6 +16,9 @@ function Model:initSprite()
     local name   = self:spriteName()
     local class  = self:spriteClass()
     local sprite = LayerManager:addSprite(layer, name, class)
+
+    sprite.ox = sprite:width() / 2
+    sprite.oy = sprite:height() / 2
 
     self:setSprite(sprite)
 end
@@ -84,8 +86,8 @@ function Model:updateAutoDestroy()
 end
 
 function Model:collided(model)
-    local x1, x2 = self.x + self.width / 2, model.x + model.width / 2
-    local y1, y2 = self.y + self.height / 2, model.y + model.height / 2
+    local x1, x2 = self.x, model.x
+    local y1, y2 = self.y, model.y
     local w      = self.width / 2 + model.width / 2
     local h      = self.height / 2 + model.height / 2
     local ox     = math.abs(x1 - x2)

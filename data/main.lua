@@ -23,9 +23,11 @@ require 'scripts/class/bullet'
 require 'scripts/class/specific/sprite_ryuko'
 require 'scripts/class/specific/sprite_enemy_a'
 require 'scripts/class/specific/sprite_bullet_ryuko_n'
+require 'scripts/class/specific/sprite_bullet_enemy_a'
 require 'scripts/class/specific/ryuko'
 require 'scripts/class/specific/enemy_a'
 require 'scripts/class/specific/bullet_ryuko_n'
+require 'scripts/class/specific/bullet_enemy_a'
 
 -- testing purpose
 require 'scripts/test/player'

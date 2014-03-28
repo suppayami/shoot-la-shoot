@@ -1,9 +1,6 @@
 function love.load()
-    local model = ModelManager:addModel("playerCharacter", "player", Ryuko, 320, 320)
-    local model = ModelManager:addModel("enemyCharacter", "enemy1", EnemyA, 100, 100)
-    local model = ModelManager:addModel("enemyCharacter", "enemy2", EnemyA, 120, 90)
-    local model = ModelManager:addModel("enemyCharacter", "enemy3", EnemyA, 105, 120)
-    local model = ModelManager:addModel("enemyCharacter", "enemy4", EnemyA, 100, 200)
+    local model = ModelManager:addModel("playerCharacter", "player", Ryuko, 300, 540)
+    love.spawn = 10
 end
 
 function love.draw()
@@ -14,4 +11,10 @@ function love.update(dt)
     LayerManager:updateAll()
     Input:update()
     ModelManager:update()
+    ---
+    love.spawn = love.spawn - 1
+    if love.spawn <= 0 then
+        love.spawn = randomNumber:random(40, 90)
+        ModelManager:addModel("enemyCharacter", "enemy_a", EnemyA)
+    end
 end

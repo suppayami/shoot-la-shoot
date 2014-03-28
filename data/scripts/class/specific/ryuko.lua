@@ -28,10 +28,6 @@ function Ryuko:bulletClass()
     return BulletRyukoN -- bullet class
 end
 
-function Ryuko:bulletSpriteClass()
-    return self:bulletClass():spriteClass() -- bullet class
-end
-
 function Ryuko:bulletType()
     return "playerBullet"
 end
@@ -42,9 +38,9 @@ end
 
 function Ryuko:actionShoot()
     local imageCache = self:bulletSpriteClass():imageCache()
-    local x1 = self.x
-    local x2 = self.x + self.width - imageCache:getWidth()
-    local y  = self.y - imageCache:getHeight() - 2
+    local x1 = self.x - self.width / 2 + imageCache:getWidth() / 2
+    local x2 = self.x + self.width / 2 - imageCache:getWidth() / 2
+    local y  = self.y - self.height / 2 - imageCache:getHeight()
 
     self:createBullet(x1, y)
     self:createBullet(x2, y)
