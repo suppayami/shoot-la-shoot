@@ -15,6 +15,6 @@ function love.update(dt)
     love.spawn = love.spawn - 1
     if love.spawn <= 0 then
         love.spawn = randomNumber:random(40, 90)
-        ModelManager:addModel("enemyCharacter", "enemy_a", EnemyA)
+        ModelManager:addModel("enemyCharacter", "enemy_a", EnemyB)
     end
 end

@@ -55,7 +55,7 @@ function EnemyA:bulletType()
 end
 
 function EnemyA:bulletName()
-    return "ryuko_bullet_n"
+    return "enemy_bullet_a"
 end
 
 function EnemyA:actionShoot()
