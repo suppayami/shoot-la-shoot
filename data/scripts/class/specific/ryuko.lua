@@ -1,4 +1,15 @@
 Ryuko = class(Player)
+Ryuko.playerInitParams = Ryuko.super.initParams
+
+function Ryuko:initParams()
+    Ryuko:playerInitParams()
+    -- hp and regen
+    self.regen = 1 / 240
+    self.hp    = 10
+    -- power up
+    self.powerA = false
+    self.powerB = false
+end
 
 function Ryuko:spriteClass()
     return SpriteRyuko
@@ -25,7 +36,11 @@ function Ryuko:moveRateY()
 end
 
 function Ryuko:bulletClass()
-    return BulletRyukoN -- bullet class
+    if self.powerA then
+        return BulletRyukoA -- bullet class for power A
+    else
+        return BulletRyukoN -- bullet class
+    end
 end
 
 function Ryuko:bulletType()
@@ -40,8 +55,14 @@ function Ryuko:actionShoot()
     local imageCache = self:bulletSpriteClass():imageCache()
     local x1 = self.x - self.width / 2 + imageCache:getWidth() / 2
     local x2 = self.x + self.width / 2 - imageCache:getWidth() / 2
+    local x3 = x1 - (x2 - x1)
+    local x4 = x2 + (x2 - x1)
     local y  = self.y - self.height / 2 - imageCache:getHeight()
 
     self:createBullet(x1, y)
     self:createBullet(x2, y)
+    if self.powerB then
+        self:createBullet(x3, y)
+        self:createBullet(x4, y)
+    end
 end

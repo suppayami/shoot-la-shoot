@@ -1,4 +1,5 @@
 EnemyA = class(Enemy)
+EnemyA.enemyInitParams = EnemyA.super.initParams
 
 function EnemyA:initSpawn()
     self.a = 90 * ((-1) ^ randomNumber:random(1,4))
@@ -11,7 +12,7 @@ function EnemyA:initSpawn()
 end
 
 function EnemyA:initParams()
-    self.hp = 1
+    self:enemyInitParams()
 end
 
 function EnemyA:spriteClass()
@@ -32,7 +33,7 @@ end
 
 function EnemyA:moveRateX()
     local s  = self.s
-    local dt = 1 / 150
+    local dt = 1 / 100
     self.b   = self.b + dt
     -- only move 3 times
     if self.b > math.pi * 3 then
@@ -64,6 +65,21 @@ function EnemyA:actionShoot()
     local y = self.y + self.height / 2 + imageCache:getHeight()
 
     self:createBullet(x, y)
+end
+
+function EnemyA:deathEffect()
+    local layer  = self:spriteLayer()
+    local name   = "deadeffect"..self:spriteName()
+    local class  = SpriteEnemyDead
+    local sprite = LayerManager:addSprite(layer, name, class)
+
+    sprite.x  = self.x
+    sprite.y  = self.y
+    
+    sprite.ox = sprite:width() / 2
+    sprite.oy = sprite:width() / 2
+
+    sprite:autoDestroy(1)
 end
 
 -- X-axis:

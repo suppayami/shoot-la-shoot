@@ -1,6 +1,13 @@
 Player = class(Character)
 Player.characterShootCondition = Player.super.shootCondition
 Player.characterUpdateCollide  = Player.super.updateCollide
+Player.characterInitParams     = Player.super.initParams
+
+function Player:initParams()
+    Player:characterInitParams()
+    -- inventory
+    self.inventory = {}
+end
 
 function Player:bulletType()
     return "playerBullet"
@@ -37,4 +44,19 @@ function Player:updateCollideBullet()
             self:applyDamage(v:getDamage())
         end
     end
+end
+
+function Player:deathEffect()
+    local layer  = self:spriteLayer()
+    local name   = "deadeffect"..self:spriteName()
+    local class  = SpritePlayerDead
+    local sprite = LayerManager:addSprite(layer, name, class)
+
+    sprite.x  = self.x
+    sprite.y  = self.y
+    
+    sprite.ox = sprite:width() / 2
+    sprite.oy = sprite:width() / 2
+
+    sprite:autoDestroy(1)
 end

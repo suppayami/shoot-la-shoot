@@ -11,7 +11,8 @@ function Character:init(x, y)
 end
 
 function Character:initParams()
-    self.hp = 1
+    self.hp    = 1
+    self.regen = 0
 end
 
 function Character:applyDamage(damage, pure)
@@ -30,8 +31,8 @@ function Character:calculateDamage(damage)
 end
 
 function Character:checkAlive()
-    if self.hp > 0 then return end
-    self:destroy()
+    if math.floor(self.hp) > 0 then return end
+    self:destroy(true)
 end
 
 function Character:shootDelay()
@@ -88,6 +89,7 @@ function Character:update()
     self:modelUpdate()
     self:updateShoot()  -- for shooting delay
     self:updateAttack() -- for shooting skill
+    self:updateRegen()
 end
 
 function Character:updateShoot()
@@ -100,4 +102,8 @@ end
 function Character:updateAttack()
     if not self:attackCondition() then return end -- condition
     self:actionAttack()
+end
+
+function Character:updateRegen()
+    self.hp = self.hp + self.regen
 end

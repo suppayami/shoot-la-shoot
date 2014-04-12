@@ -17,10 +17,13 @@ function Model:initSprite()
     local class  = self:spriteClass()
     local sprite = LayerManager:addSprite(layer, name, class)
 
+    self:setupSprite(sprite)
+    self:setSprite(sprite)
+end
+
+function Model:setupSprite(sprite)
     sprite.ox = sprite:width() / 2
     sprite.oy = sprite:height() / 2
-
-    self:setSprite(sprite)
 end
 
 function Model:spriteClass()
@@ -102,9 +105,14 @@ function Model:collided(model)
     return (colX and colY)
 end
 
-function Model:destroy()
+function Model:destroy(effect)
     if self.destroyed then return end
+    if effect then self:deathEffect() end
     self.destroyed = true
     self.sprite:dispose()
     self.sprite    = nil
+end
+
+function Model:deathEffect()
+    -- none
 end

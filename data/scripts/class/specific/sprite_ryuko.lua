@@ -1,10 +1,17 @@
-SpriteRyuko = class(Sprite)
-
-function SpriteRyuko:initImage()
-    local image = self:imageCache()
-    self:setImage(image)
-end
+SpriteRyuko = class(Animation)
 
 function SpriteRyuko:imageCache()
-    return Cache:loadImage("graphics/player.png")
+    return Cache:loadImage("graphics/Ryuko.png")
+end
+
+function SpriteRyuko:animateFrames()
+    return 4
+end
+
+function SpriteRyuko:animateDelay()
+    return 8
+end
+
+function SpriteRyuko:animateRows()
+    return 1
 end

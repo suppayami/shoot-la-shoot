@@ -1,5 +1,6 @@
 EnemyB = class(Enemy)
-EnemyB.characterAttackCondition = EnemyB.super.attackCondition
+EnemyB.enemyInitParams      = EnemyB.super.initParams
+EnemyB.enemyAttackCondition = EnemyB.super.attackCondition
 
 function EnemyB:initSpawn()
     self.a = 90
@@ -24,7 +25,7 @@ function EnemyB:initSpawn()
 end
 
 function EnemyB:initParams()
-    self.hp = 1
+    self:enemyInitParams()
 end
 
 function EnemyB:spriteClass()
@@ -71,7 +72,7 @@ function EnemyB:actionShoot()
 end
 
 function EnemyB:attackCondition()
-    local cond = self:characterAttackCondition()
+    local cond = self:enemyAttackCondition()
     self.bd = self.bd - 1
     cond = cond and (self.bd <= 0)
     return cond
@@ -92,6 +93,21 @@ function EnemyB:actionAttack()
         self.bc = 0
         self.bd = 0
     end
+end
+
+function EnemyB:deathEffect()
+    local layer  = self:spriteLayer()
+    local name   = "deadeffect"..self:spriteName()
+    local class  = SpriteEnemyDead
+    local sprite = LayerManager:addSprite(layer, name, class)
+
+    sprite.x  = self.x
+    sprite.y  = self.y
+    
+    sprite.ox = sprite:width() / 2
+    sprite.oy = sprite:width() / 2
+
+    sprite:autoDestroy(1)
 end
 
 -- X-axis:

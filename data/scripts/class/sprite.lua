@@ -18,7 +18,8 @@ function Sprite:init()
 end
 
 function Sprite:initImage()
-    -- none
+    local image = self:imageCache()
+    self:setImage(image)
 end
 
 function Sprite:imageCache()
