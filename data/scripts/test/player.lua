@@ -17,7 +17,7 @@ function love.update(dt)
         love.spawn = randomNumber:random(40, 90)
         local hjhj = randomNumber:random(1, 10)
         if hjhj >= 6 then
-            ModelManager:addModel("enemyCharacter", "enemy_b", EnemyB)
+            ModelManager:addModel("enemyCharacter", "enemy_b", EnemyA)
         else
             ModelManager:addModel("enemyCharacter", "enemy_a", EnemyA)
         end

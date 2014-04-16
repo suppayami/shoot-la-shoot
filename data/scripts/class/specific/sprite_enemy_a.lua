@@ -1,5 +1,17 @@
-SpriteEnemyA = class(Sprite)
+SpriteEnemyA = class(Animation)
 
 function SpriteEnemyA:imageCache()
-    return Cache:loadImage("graphics/enemy A.png")
+    return Cache:loadImage("graphics/Kaiju COVER.png")
+end
+
+function SpriteEnemyA:animateFrames()
+    return 4
+end
+
+function SpriteEnemyA:animateDelay()
+    return 12
+end
+
+function SpriteEnemyA:animateRows()
+    return 2
 end

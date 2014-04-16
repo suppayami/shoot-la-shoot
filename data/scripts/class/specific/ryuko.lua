@@ -53,8 +53,8 @@ end
 
 function Ryuko:actionShoot()
     local imageCache = self:bulletSpriteClass():imageCache()
-    local x1 = self.x - self.width / 2 + imageCache:getWidth() / 2
-    local x2 = self.x + self.width / 2 - imageCache:getWidth() / 2
+    local x1 = self.x - self.width / 2 + imageCache:getWidth() / 2 + self.width / 5
+    local x2 = self.x + self.width / 2 - imageCache:getWidth() / 2 - self.width / 5
     local x3 = x1 - (x2 - x1)
     local x4 = x2 + (x2 - x1)
     local y  = self.y - self.height / 2 - imageCache:getHeight()

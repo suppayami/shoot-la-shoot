@@ -65,6 +65,8 @@ function EnemyA:actionShoot()
     local y = self.y + self.height / 2 + imageCache:getHeight()
 
     self:createBullet(x, y)
+    self.sprite:setRow(1)
+    self.sprite:autoReset(0)
 end
 
 function EnemyA:deathEffect()
