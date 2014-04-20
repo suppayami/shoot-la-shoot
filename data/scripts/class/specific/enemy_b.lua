@@ -3,23 +3,20 @@ EnemyB.enemyInitParams      = EnemyB.super.initParams
 EnemyB.enemyAttackCondition = EnemyB.super.attackCondition
 
 function EnemyB:initSpawn()
-    self.a = 90
-    self.b = 0
-    self.c = randomNumber:random(1, 3)
-    self.f = 1 / randomNumber:random(45, 70)
-    self.x = randomNumber:random(self.width / 2, love.window.getWidth() - self.width / 2)
-    self.y = 0
+    self.h = 0
+    self.w = 0
+    self.rh = randomNumber:random(150, 360)
+    self.rw = randomNumber:random(290, 360)
+    if randomNumber:random(1, 10) <= 5 then
+        self.x = randomNumber:random(32, 128)
+    else
+        self.x = randomNumber:random(480, 612)
+        self.rw = -self.rw
+    end
+    self.y = -48
     --
     self.bc = 0
     self.bd = 0
-    --
-    if self.x < love.window.getWidth() / 2 then
-        self.a = self.a * (- 1)
-    end
-    --
-    local max = math.max(self.x, love.window.getWidth() - self.x) / 2
-    local min = max / 1.5
-    self.s = randomNumber:random(min, max)
     --
     self:update()
 end
@@ -33,7 +30,7 @@ function EnemyB:spriteClass()
 end
 
 function EnemyB:spriteLayer()
-    return "enemy"
+    return "scene"
 end
 
 function EnemyB:spriteName()
@@ -45,18 +42,29 @@ function EnemyB:shootDelay()
 end
 
 function EnemyB:moveRateX()
-    local s  = self.s
-    local dt = self.f
-    self.b   = self.b + dt
-    return s * math.cos(math.pi * self.a / 180 + self.b) * dt
+    if self.h >= self.rh and self.w < math.abs(self.rw) then
+        self.w = self.w + 3
+        if self.rw > 0 then
+            return 3
+        else
+            return -3
+        end
+    else
+        return 0
+    end 
 end
 
 function EnemyB:moveRateY()
-    return self.c
+    if self.h < self.rh or self.w >= math.abs(self.rw) then
+        self.h = self.h + 3
+        return 3
+    else
+        return 0
+    end
 end
 
 function EnemyB:bulletClass()
-    return BulletEnemyA -- bullet class
+    return BulletEnemyB -- bullet class
 end
 
 function EnemyB:bulletType()
@@ -68,7 +76,10 @@ function EnemyB:bulletName()
 end
 
 function EnemyB:actionShoot()
-    self.attack = true
+    self.sprite:setRow(1)
+    self.sprite:noLoop(function() 
+        self.attack = true
+    end)
 end
 
 function EnemyB:attackCondition()
@@ -92,6 +103,9 @@ function EnemyB:actionAttack()
         self.attack = false
         self.bc = 0
         self.bd = 0
+        if self.sprite then
+            self.sprite:setRow(0)
+        end
     end
 end
 

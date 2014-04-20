@@ -7,7 +7,8 @@ function EnemyA:initSpawn()
     self.s = 330 + self.width / 2
     self.x = love.window.getWidth() / 2
     self.x = self.x + self.s * math.sin(math.pi * self.a / 180)
-    self.y = randomNumber:random(self.height / 2 + 8, love.window.getHeight() / 4)
+    self.sy = randomNumber:random(self.height / 2 + 8, love.window.getHeight() / 4 - 60)
+    self.y  = self.sy
     self:update()
 end
 
@@ -20,7 +21,7 @@ function EnemyA:spriteClass()
 end
 
 function EnemyA:spriteLayer()
-    return "enemy"
+    return "scene"
 end
 
 function EnemyA:spriteName()
@@ -35,6 +36,7 @@ function EnemyA:moveRateX()
     local s  = self.s
     local dt = 1 / 100
     self.b   = self.b + dt
+    self.y   = self.sy + 160 * math.floor(self.b / math.pi)
     -- only move 3 times
     if self.b > math.pi * 3 then
         return 999
@@ -60,13 +62,13 @@ function EnemyA:bulletName()
 end
 
 function EnemyA:actionShoot()
-    local imageCache = self:bulletSpriteClass():imageCache()
-    local x = self.x
-    local y = self.y + self.height / 2 + imageCache:getHeight()
-
-    self:createBullet(x, y)
     self.sprite:setRow(1)
-    self.sprite:autoReset(0)
+    self.sprite:autoReset(0, function() 
+        local imageCache = self:bulletSpriteClass():imageCache()
+        local x = self.x
+        local y = self.y + self.height / 2 + imageCache:getHeight()
+        self:createBullet(x, y) 
+    end)
 end
 
 function EnemyA:deathEffect()

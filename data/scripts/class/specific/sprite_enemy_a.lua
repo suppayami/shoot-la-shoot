@@ -9,7 +9,7 @@ function SpriteEnemyA:animateFrames()
 end
 
 function SpriteEnemyA:animateDelay()
-    return 12
+    return 10
 end
 
 function SpriteEnemyA:animateRows()

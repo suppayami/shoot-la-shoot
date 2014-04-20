@@ -11,8 +11,13 @@ function Character:init(x, y)
 end
 
 function Character:initParams()
+    self.mhp   = 1
     self.hp    = 1
     self.regen = 0
+end
+
+function Character:hpRate()
+    return self.hp / self.mhp
 end
 
 function Character:applyDamage(damage, pure)
@@ -86,6 +91,7 @@ function Character:createBullet(x, y)
 end
 
 function Character:update()
+    if self.destroyed then return end
     self:modelUpdate()
     self:updateShoot()  -- for shooting delay
     self:updateAttack() -- for shooting skill
@@ -105,5 +111,5 @@ function Character:updateAttack()
 end
 
 function Character:updateRegen()
-    self.hp = self.hp + self.regen
+    self.hp = math.min(self.hp + self.regen, self.mhp)
 end

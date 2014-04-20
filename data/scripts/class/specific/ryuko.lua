@@ -6,6 +6,7 @@ function Ryuko:initParams()
     -- hp and regen
     self.regen = 1 / 240
     self.hp    = 10
+    self.mhp   = 10
     -- power up
     self.powerA = false
     self.powerB = false
@@ -16,7 +17,7 @@ function Ryuko:spriteClass()
 end
 
 function Ryuko:spriteLayer()
-    return "player"
+    return "scene"
 end
 
 function Ryuko:spriteName()

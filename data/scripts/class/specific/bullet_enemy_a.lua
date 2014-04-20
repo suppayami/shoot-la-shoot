@@ -9,7 +9,7 @@ function BulletEnemyA:spriteClass()
 end
 
 function BulletEnemyA:spriteLayer()
-    return "bullet"
+    return "scene"
 end
 
 function BulletEnemyA:spriteName()
@@ -22,4 +22,8 @@ end
 
 function BulletEnemyA:moveRateY()
     return 10
+end
+
+function BulletEnemyA:applyEffect()
+    self:destroy()
 end

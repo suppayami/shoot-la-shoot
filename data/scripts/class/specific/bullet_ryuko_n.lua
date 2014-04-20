@@ -9,7 +9,7 @@ function BulletRyukoN:spriteClass()
 end
 
 function BulletRyukoN:spriteLayer()
-    return "bullet"
+    return "scene"
 end
 
 function BulletRyukoN:spriteName()
@@ -22,4 +22,8 @@ end
 
 function BulletRyukoN:moveRateY()
     return -10
+end
+
+function BulletRyukoN:applyEffect()
+    -- nothing
 end

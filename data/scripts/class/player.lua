@@ -7,6 +7,9 @@ function Player:initParams()
     Player:characterInitParams()
     -- inventory
     self.inventory = {}
+    -- dirty slow
+    self.slowRate     = 0
+    self.slowDuration = 0
 end
 
 function Player:bulletType()
@@ -15,13 +18,19 @@ end
 
 function Player:updateMove()
     -- move by input
-    self.x = self.x + self:moveRateX() * Input.axisX
-    self.y = self.y + self:moveRateY() * Input.axisY
+    -- dirty slow
+    self.x = self.x + self:moveRateX() * Input.axisX * (1 - self.slowRate)
+    self.y = self.y + self:moveRateY() * Input.axisY * (1 - self.slowRate)
     -- correct position, out of bound
     self.x = math.max(self.width / 2, self.x)
     self.x = math.min(love.window.getWidth() - self.width / 2, self.x)
     self.y = math.max(self.height / 2, self.y)
     self.y = math.min(love.window.getHeight() - self.height / 2, self.y)
+    -- dirty slow
+    self.slowDuration = math.max(0, self.slowDuration - 1)
+    if self.slowDuration <= 0 then
+        self.slowRate = 0
+    end
 end
 
 function Player:shootCondition()
@@ -40,7 +49,7 @@ function Player:updateCollideBullet()
     local enemyBullet = ModelManager:getModel('enemyBullet')
     for k,v in pairs(enemyBullet) do
         if self:collided(v) then
-            v:destroy()
+            v:applyEffect(self)
             self:applyDamage(v:getDamage())
         end
     end

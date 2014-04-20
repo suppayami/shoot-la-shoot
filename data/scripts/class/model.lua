@@ -58,6 +58,7 @@ function Model:initSize()
 end
 
 function Model:update()
+    if self.destroyed then return end
     self:updateSprite()
     self:updateCollide()
     self:updateMove()

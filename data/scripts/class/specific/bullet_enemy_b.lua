@@ -1,25 +1,29 @@
-BulletEnemyA = class(Bullet)
+BulletEnemyB = class(Bullet)
 
-function BulletEnemyA:getDamage()
+function BulletEnemyB:getDamage()
     return 1
 end
 
-function BulletEnemyA:spriteClass()
+function BulletEnemyB:spriteClass()
     return SpriteBulletEnemyB
 end
 
-function BulletEnemyA:spriteLayer()
-    return "bullet"
+function BulletEnemyB:spriteLayer()
+    return "scene"
 end
 
-function BulletEnemyA:spriteName()
+function BulletEnemyB:spriteName()
     return "bullet_enemy_b"
 end
 
-function BulletEnemyA:moveRateX()
+function BulletEnemyB:moveRateX()
     return 0
 end
 
-function BulletEnemyA:moveRateY()
+function BulletEnemyB:moveRateY()
     return 10
+end
+
+function BulletEnemyB:applyEffect()
+    self:destroy()
 end

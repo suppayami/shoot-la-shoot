@@ -12,10 +12,11 @@ function ModelManager:addModel(type, modelName, modelClass, ...)
     return t[modelName]
 end
 
-function ModelManager:getModel(type)
+function ModelManager:getModel(type, name)
     if self.types[type] == nil then self.types[type] = {} end
     --
     local result = {}
+    if name then return self.types[type][name] end
     for k,v in pairs(self.types[type]) do
         if not v.destroyed then result[#result + 1] = v end
     end

@@ -18,3 +18,7 @@ function Bullet:updateAutoDestroy()
         self:destroy()
     end
 end
+
+function Bullet:applyEffect(target)
+    -- nothing
+end

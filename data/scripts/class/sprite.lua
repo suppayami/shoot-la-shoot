@@ -31,9 +31,17 @@ function Sprite:width()
     return w * math.abs(self:realZoomX())
 end
 
+function Sprite:imageWidth()
+    return self.image:getWidth()
+end
+
 function Sprite:height()
     local x, y, w, h = self.quad:getViewport()
     return h * math.abs(self:realZoomY())
+end
+
+function Sprite:imageHeight()
+    return self.image:getHeight()
 end
 
 function Sprite:quadX()
