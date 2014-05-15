@@ -172,7 +172,7 @@ function Animation:frameCallback(frame, callback)
     self.frameCall = callback
 end
 
-function Animation:timer(frame, callback)
+function Animation:setTimer(frame, callback)
     self.timer     = frame
     self.timerCall = callback
 end

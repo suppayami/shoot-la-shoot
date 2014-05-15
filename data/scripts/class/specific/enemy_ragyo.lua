@@ -152,10 +152,30 @@ function EnemyRagyo:throwBombs()
         local model = ModelManager:addModel("enemySpecial", "bomb", RagyoBomb, x, y)
         model:throwTo(toX, toY)
 
+        model.sprite:setTimer(200, function()
+            local layer  = self:spriteLayer()
+            local name   = "deadeffect_bomb_"..self:spriteName()
+            local class  = SpriteEnemyDead
+            local sprite = LayerManager:addSprite(layer, name, class)
+
+            sprite.x  = model.x
+            sprite.y  = model.y
+            
+            sprite.ox = sprite:width() / 2
+            sprite.oy = sprite:width() / 2
+
+            sprite:autoDestroy(1)
+            model:destroy()
+        end)
+
         self.bombs[#self.bombs+1] = model
     end
     --
     self.bombBatch = self.bombBatch + 1
+end
+
+function EnemyRagyo:bombDamage()
+    return 2
 end
 
 function EnemyRagyo:shootSun()
