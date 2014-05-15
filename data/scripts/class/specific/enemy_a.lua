@@ -62,12 +62,14 @@ function EnemyA:bulletName()
 end
 
 function EnemyA:actionShoot()
+    if self.destroyed then return end
     self.sprite:setRow(1)
     self.sprite:autoReset(0, function() 
         local imageCache = self:bulletSpriteClass():imageCache()
         local x = self.x
         local y = self.y + self.height / 2 + imageCache:getHeight()
-        self:createBullet(x, y) 
+        local player = ModelManager:getModel("playerCharacter", "player")
+        self:createBullet(x, y, player, false) 
     end)
 end
 

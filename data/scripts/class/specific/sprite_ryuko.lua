@@ -1,6 +1,7 @@
 SpriteRyuko = class(Animation)
 
 function SpriteRyuko:imageCache()
+    self.z = 11
     return Cache:loadImage("graphics/Ryuko.png")
 end
 

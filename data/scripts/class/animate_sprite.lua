@@ -1,12 +1,15 @@
 Animation = class(Sprite)
 Animation.spriteInit = Animation.super.init
 
-function Animation:init()
+function Animation:init(vertical, subject)
     self:spriteInit()
     ---
     local frames = self:animateFrames()
     local delay  = self:animateDelay()
     local rows   = self:animateRows()
+    self.vertical = false
+    self.subject  = subject
+    if vertical then self.vertical = vertical end
     self:initAnimation(frames, delay, rows)
 end
 
@@ -38,9 +41,18 @@ function Animation:initAnimation(frames, delay, rows)
     self.reset      = -1 -- -1 means NO reset row
     self.callback   = nil -- use for loop/reset/nonLoop
     self.nonLoop    = false
+    self.callFrame  = -1 -- -1 means NO call
+    self.frameCall  = nil -- use for frame call
+    self.timer      = 0
+    self.timerCall  = nil
     ---
-    self.sw    = self:width() / self.animate.frame
-    self.sh    = self:height() / self.animate.rows
+    if self.vertical then
+        self.sw    = self:width() / self.animate.rows
+        self.sh    = self:height() / self.animate.frame
+    else
+        self.sw    = self:width() / self.animate.frame
+        self.sh    = self:height() / self.animate.rows
+    end
     ---
     self:setFrame()
 end
@@ -50,9 +62,31 @@ function Animation:setFrame()
         self.frame = self.animate.frame 
     end
     --
-    local x = self.frame * self.sw
-    local y = self.row   * self.sh
+    local x = 0
+    local y = 0
+    if self.vertical then
+        x = self.row   * self.sw
+        y = self.frame * self.sh
+    else
+        x = self.frame * self.sw
+        y = self.row   * self.sh
+    end
     self:setQuad(x, y, self.sw, self.sh)
+end
+
+function Animation:reset()
+    self.tick  = self.animate.delay
+    self.frame = 0
+    --
+    self.loop       = 0
+    self.loop_count = 0
+    self.reset      = -1
+    self.callback   = nil
+    self.nonLoop    = false
+    self.callFrame  = -1
+    self.frameCall  = nil
+    --
+    self:setFrame()
 end
 
 function Animation:setRow(row)
@@ -68,6 +102,8 @@ end
 
 function Animation:update(dt)
     self:updateAnimation(dt)
+    self:updatePosition(dt)
+    self:updateTimer(dt)
 end
 
 function Animation:updateAnimation(dt)
@@ -75,7 +111,13 @@ function Animation:updateAnimation(dt)
     if self.tick <= 0 then
         self.tick  = self.animate.delay
         self.frame = self.frame + 1
+        if self.frame == self.callFrame then
+            if self.frameCall then
+                self.frameCall()
+            end
+        end
         if self.nonLoop and self.frame >= self.animate.frame then
+            self.frame = self.animate.frame - 1
             if self.callback then
                 self.callback()
             end
@@ -123,4 +165,28 @@ end
 function Animation:autoReset(row, callback)
     self.reset = row
     self.callback = callback
+end
+
+function Animation:frameCallback(frame, callback)
+    self.callFrame = frame
+    self.frameCall = callback
+end
+
+function Animation:timer(frame, callback)
+    self.timer     = frame
+    self.timerCall = callback
+end
+
+function Animation:updatePosition(dt)
+    if not self.subject then return end
+    self.x = self.subject.x
+    self.y = self.subject.y
+end
+
+function Animation:updateTimer(dt)
+    if self.timer <= 0 then return end
+    self.timer = self.timer - 1
+    if self.timer <= 0 and self.timerCall then
+        self.timerCall()
+    end
 end

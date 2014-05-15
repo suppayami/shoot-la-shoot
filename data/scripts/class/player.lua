@@ -1,4 +1,5 @@
 Player = class(Character)
+Player.characterUpdate         = Player.super.update
 Player.characterShootCondition = Player.super.shootCondition
 Player.characterUpdateCollide  = Player.super.updateCollide
 Player.characterInitParams     = Player.super.initParams
@@ -6,14 +7,22 @@ Player.characterInitParams     = Player.super.initParams
 function Player:initParams()
     Player:characterInitParams()
     -- inventory
-    self.inventory = {}
+    self.inventory = {item1=false, item2=false, item3=false}
     -- dirty slow
     self.slowRate     = 0
     self.slowDuration = 0
+    -- life
+    self.life = 3
 end
 
 function Player:bulletType()
     return "playerBullet"
+end
+
+function Player:update()
+    self:characterUpdate()
+    if self.destroyed then return end
+    self:updateItem()
 end
 
 function Player:updateMove()
@@ -25,12 +34,54 @@ function Player:updateMove()
     self.x = math.max(self.width / 2, self.x)
     self.x = math.min(love.window.getWidth() - self.width / 2, self.x)
     self.y = math.max(self.height / 2, self.y)
-    self.y = math.min(love.window.getHeight() - self.height / 2, self.y)
+    self.y = math.min(love.window.getHeight() - self.height / 2 - 16, self.y)
     -- dirty slow
     self.slowDuration = math.max(0, self.slowDuration - 1)
     if self.slowDuration <= 0 then
         self.slowRate = 0
     end
+end
+
+function Player:updateItem()
+    local item = nil
+    --
+    if Input.item1 then
+        item = self.inventory.item1
+        self.inventory.item1 = false
+    elseif Input.item2 then
+        item = self.inventory.item2
+        self.inventory.item2 = false
+    elseif Input.item3 then
+        item = self.inventory.item3
+        self.inventory.item3 = false
+    end
+    --
+    if item then
+        item:applyEffect(self)
+    end
+end
+
+function Player:addItem(item)
+    if not self.inventory.item1 then
+        self.inventory.item1 = item
+        item:setInventory("item1")
+    elseif not self.inventory.item2 then
+        self.inventory.item2 = item
+        item:setInventory("item2")
+    elseif not self.inventory.item3 then
+        self.inventory.item3 = item
+        item:setInventory("item3")
+    else
+        local item1 = self.inventory.item1
+        self.inventory.item1 = self.inventory.item2
+        self.inventory.item1:setInventory("item1")
+        self.inventory.item2 = self.inventory.item3
+        self.inventory.item2:setInventory("item2")
+        self.inventory.item3 = item
+        self.inventory.item3:setInventory("item3")
+        item1:destroy()
+    end
+    --
 end
 
 function Player:shootCondition()
@@ -49,8 +100,12 @@ function Player:updateCollideBullet()
     local enemyBullet = ModelManager:getModel('enemyBullet')
     for k,v in pairs(enemyBullet) do
         if self:collided(v) then
-            v:applyEffect(self)
-            self:applyDamage(v:getDamage())
+            if not v.is_damage[self] then v.is_damage[self] = 0 end
+            if v.is_damage[self] <= 0 then
+                v:applyEffect(self)
+                self:applyDamage(v:getDamage())
+                v.is_damage[self] = 30
+            end
         end
     end
 end

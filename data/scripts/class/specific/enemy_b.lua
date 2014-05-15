@@ -76,6 +76,7 @@ function EnemyB:bulletName()
 end
 
 function EnemyB:actionShoot()
+    if self.destroyed then return end
     self.sprite:setRow(1)
     self.sprite:noLoop(function() 
         self.attack = true
@@ -90,6 +91,7 @@ function EnemyB:attackCondition()
 end
 
 function EnemyB:actionAttack()
+    if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
     local y = self.y + self.height / 2 + imageCache:getHeight()

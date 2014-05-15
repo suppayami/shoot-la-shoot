@@ -26,6 +26,7 @@ function Enemy:updateCollidePlayer()
     local playerCharacter = ModelManager:getModel('playerCharacter')
     for k,v in pairs(playerCharacter) do
         if self:collided(v) then
+            v:applyDamage(self.hp, true)
             self:applyDamage(self.hp, true)
         end
     end
@@ -35,8 +36,12 @@ function Enemy:updateCollideBullet()
     local playerBullter = ModelManager:getModel('playerBullet')
     for k,v in pairs(playerBullter) do
         if self:collided(v) then
-            v:applyEffect(self)
-            self:applyDamage(v:getDamage())
+            if not v.is_damage[self] then v.is_damage[self] = 0 end
+            if v.is_damage[self] <= 0 then
+                v:applyEffect(self)
+                self:applyDamage(v:getDamage())
+                v.is_damage[self] = 30
+            end
         end
     end
 end

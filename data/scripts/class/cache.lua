@@ -6,7 +6,7 @@ function Cache:loadImage(filename)
     local hash = self.cache
     if hash[filename] then return hash[filename] end
     hash[filename] = love.graphics.newImage(filename)
-    hash[filename]:setFilter("nearest", "nearest")
+    -- hash[filename]:setFilter("nearest", "nearest")
     return hash[filename]
 end
 

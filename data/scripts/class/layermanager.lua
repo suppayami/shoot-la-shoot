@@ -1,7 +1,8 @@
 -- singleton
 LayerManager = class(Object)
-LayerManager.layer = {}
-LayerManager.sort  = {}
+LayerManager.layer  = {}
+LayerManager.sort   = {}
+LayerManager.zLayer = {}
 
 function LayerManager:clearAll()
     for k,v in pairs(self.layer) do

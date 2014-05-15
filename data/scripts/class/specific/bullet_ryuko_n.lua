@@ -1,9 +1,5 @@
 BulletRyukoN = class(Bullet)
 
-function BulletRyukoN:getDamage()
-    return 1
-end
-
 function BulletRyukoN:spriteClass()
     return SpriteBulletRyukoN
 end
@@ -17,13 +13,13 @@ function BulletRyukoN:spriteName()
 end
 
 function BulletRyukoN:moveRateX()
-    return 0
+    return 10 * math.sin(self.sprite.angle)
 end
 
 function BulletRyukoN:moveRateY()
-    return -10
+    return -10 * math.cos(self.sprite.angle)
 end
 
-function BulletRyukoN:applyEffect()
-    -- nothing
+function BulletRyukoN:applyEffect(target)
+    self.is_damage[target] = 60
 end

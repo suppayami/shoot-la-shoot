@@ -1,9 +1,5 @@
 BulletEnemyC = class(Bullet)
 
-function BulletEnemyC:getDamage()
-    return 1
-end
-
 function BulletEnemyC:spriteClass()
     return SpriteBulletEnemyC
 end

@@ -54,10 +54,12 @@ function EnemyD:bulletName()
 end
 
 function EnemyD:actionShoot()
+    if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
     local y = self.y + self.height / 2 + imageCache:getHeight()
-    self:createBullet(x, y) 
+    local player = ModelManager:getModel("playerCharacter", "player")
+    self:createBullet(x, y, player, false) 
 end
 
 function EnemyD:deathEffect()

@@ -14,10 +14,15 @@ function Character:initParams()
     self.mhp   = 1
     self.hp    = 1
     self.regen = 0
+    self.life  = 1
 end
 
 function Character:hpRate()
     return self.hp / self.mhp
+end
+
+function Character:healDamage(damage)
+    self.hp = math.min(self.hp + damage, self.mhp)
 end
 
 function Character:applyDamage(damage, pure)
@@ -27,7 +32,7 @@ function Character:applyDamage(damage, pure)
     else 
         realDamage = self:calculateDamage(damage) 
     end
-    self.hp = math.max(self.hp - realDamage, 0)
+    self.hp = self.hp - realDamage
     self:checkAlive()
 end
 
@@ -37,7 +42,16 @@ end
 
 function Character:checkAlive()
     if math.floor(self.hp) > 0 then return end
+    self:lostLife()
+    self.life = self.life - 1
+    self.hp   = self.mhp + self.hp
+    self:checkAlive()
+    if self.life > 0 then return end
     self:destroy(true)
+end
+
+function Character:lostLife()
+    -- none
 end
 
 function Character:shootDelay()
@@ -80,12 +94,12 @@ function Character:actionAttack()
     -- none
 end
 
-function Character:createBullet(x, y)
+function Character:createBullet(x, y, target, homing)
     local typen = self:bulletType()
     local name  = self:bulletName()
     local class = self:bulletClass()
 
-    local model = ModelManager:addModel(typen, name, class, x, y)
+    local model = ModelManager:addModel(typen, name, class, x, y, self, target, homing)
 
     return model
 end
@@ -112,4 +126,8 @@ end
 
 function Character:updateRegen()
     self.hp = math.min(self.hp + self.regen, self.mhp)
+end
+
+function Character:getDamage()
+    return 1
 end

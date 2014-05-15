@@ -8,6 +8,11 @@ Input.down  = false
 Input.left  = false
 Input.right = false
 Input.fire  = false
+Input.item1 = false
+Input.item2 = false
+Input.item3 = false
+-- for pressed and released key
+Input.pressed = {}
 
 function Input:update()
     -- reset all key
@@ -18,6 +23,24 @@ function Input:update()
     if love.keyboard.isDown("down")  then self.down  = true end
     if love.keyboard.isDown("left")  then self.left  = true end
     if love.keyboard.isDown("right") then self.right = true end
+    if love.keyboard.isDown("d") then
+        if not self.pressed.d then
+            self.item1 = true
+            self.pressed.d = true
+        end
+    end
+    if love.keyboard.isDown("s") then
+        if not self.pressed.s then
+            self.item2 = true
+            self.pressed.s = true
+        end
+    end
+    if love.keyboard.isDown("a") then
+        if not self.pressed.a then
+            self.item3 = true
+            self.pressed.a = true
+        end
+    end
     -- update axisX & axisY for movement
     self:resetAxis()
     self:updateAxis()
@@ -29,6 +52,9 @@ function Input:resetKey()
     self.down  = false
     self.left  = false
     self.right = false
+    self.item1 = false
+    self.item2 = false
+    self.item3 = false
 end
 
 function Input:resetAxis()
@@ -55,4 +81,8 @@ function Input:updateAxis()
     -- axis Y
     if self.up    then self.axisY = math.max(self.axisY - 0.1, -1) end
     if self.down  then self.axisY = math.min(self.axisY + 0.1, 1)  end
+end
+
+function love.keyreleased(key)
+    Input.pressed[key] = false
 end

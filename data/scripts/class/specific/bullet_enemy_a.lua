@@ -1,9 +1,5 @@
 BulletEnemyA = class(Bullet)
 
-function BulletEnemyA:getDamage()
-    return 1
-end
-
 function BulletEnemyA:spriteClass()
     return SpriteBulletEnemyA
 end
@@ -17,11 +13,21 @@ function BulletEnemyA:spriteName()
 end
 
 function BulletEnemyA:moveRateX()
-    return 0
+    if not self.moveY then return 0 end
+    if self.moveY > 0 then
+        return 10 * math.sin(self.flyAngle)
+    else
+        return -10 * math.sin(self.flyAngle)
+    end
 end
 
 function BulletEnemyA:moveRateY()
-    return 10
+    if not self.moveY then return 10 end
+    if self.moveY > 0 then
+        return 10 * math.cos(self.flyAngle)
+    else
+        return -10 * math.cos(self.flyAngle)
+    end
 end
 
 function BulletEnemyA:applyEffect()

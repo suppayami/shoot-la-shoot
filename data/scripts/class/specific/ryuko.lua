@@ -12,6 +12,11 @@ function Ryuko:initParams()
     self.powerB = false
 end
 
+function Ryuko:initSize()
+    self.width  = self.sprite:width() - 32
+    self.height = self.sprite:height() - 42
+end
+
 function Ryuko:spriteClass()
     return SpriteRyuko
 end
@@ -54,16 +59,31 @@ end
 
 function Ryuko:actionShoot()
     local imageCache = self:bulletSpriteClass():imageCache()
-    local x1 = self.x - self.width / 2 + imageCache:getWidth() / 2 + self.width / 5
-    local x2 = self.x + self.width / 2 - imageCache:getWidth() / 2 - self.width / 5
-    local x3 = x1 - (x2 - x1)
-    local x4 = x2 + (x2 - x1)
-    local y  = self.y - self.height / 2 - imageCache:getHeight()
+    local x1 = self.x - self.sprite:width() / 2 + imageCache:getWidth() / 2 + self.sprite:width() / 4
+    local x2 = self.x + self.sprite:width() / 2 - imageCache:getWidth() / 2 - self.sprite:width() / 4
+    local x3 = x1 - 20
+    local x4 = x2 + 20
+    local y  = self.y - self.sprite:height() / 2 - imageCache:getHeight() + 12
 
     self:createBullet(x1, y)
     self:createBullet(x2, y)
     if self.powerB then
-        self:createBullet(x3, y)
-        self:createBullet(x4, y)
+        local b1 = self:createBullet(x3, y)
+        local b2 = self:createBullet(x4, y)
+        b1.sprite.angle = - math.pi / 4 + math.pi / 8
+        b2.sprite.angle = math.pi / 4 - math.pi / 8
+    end
+end
+
+function Ryuko:lostLife()
+    self.powerA = false
+    self.powerB = false
+end
+
+function Ryuko:getDamage()
+    if self.powerA then
+        return 2
+    else
+        return 1
     end
 end

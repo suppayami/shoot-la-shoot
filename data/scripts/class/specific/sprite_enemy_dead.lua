@@ -5,7 +5,7 @@ function SpriteEnemyDead:imageCache()
 end
 
 function SpriteEnemyDead:animateFrames()
-    return 8
+    return 7
 end
 
 function SpriteEnemyDead:animateDelay()

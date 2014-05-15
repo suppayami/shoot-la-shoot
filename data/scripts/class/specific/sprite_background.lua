@@ -1,7 +1,7 @@
 SpriteBackgroundGround = class(Sprite)
 
 function SpriteBackgroundGround:imageCache()
-    local bg = Cache:loadImage("graphics/bg.png")
+    local bg = Cache:loadImage("graphics/bgrevised.png")
     self.z  = 1
     bg:setWrap("repeat", "repeat")
     return bg

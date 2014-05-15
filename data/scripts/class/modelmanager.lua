@@ -1,6 +1,7 @@
 -- singleton
 ModelManager = class(Object)
 ModelManager.types = {}
+ModelManager.garbage = {}
 
 function ModelManager:addModel(type, modelName, modelClass, ...)
     if self.types[type] == nil then self.types[type] = {} end
@@ -16,7 +17,12 @@ function ModelManager:getModel(type, name)
     if self.types[type] == nil then self.types[type] = {} end
     --
     local result = {}
-    if name then return self.types[type][name] end
+    if name then 
+        if type == "playerCharacter" and not self.types[type][name] then
+            return self.garbage[name]
+        end
+        return self.types[type][name] 
+    end
     for k,v in pairs(self.types[type]) do
         if not v.destroyed then result[#result + 1] = v end
     end
@@ -40,7 +46,12 @@ end
 function ModelManager:garbageCollect()
     for k,v in pairs(self.types) do
         for i,m in pairs(v) do
-            if m.destroyed then v[i] = nil end
+            if m.destroyed then 
+                if k == "playerCharacter" then
+                    self.garbage[i] = m
+                end
+                v[i] = nil 
+            end
         end
     end
 end

@@ -1,9 +1,9 @@
 Sprite = class(Object)
 
 function Sprite:init()
-    self.x, self.y, self.z = 0, 0, 5
+    self.x, self.y, self.z = 0, 0, 10
     self.ox, self.oy = 0, 0
-    self.zoom_x, self.zoom_y = 1, 1
+    self.zoom_x, self.zoom_y = 1.0, 1.0
     self.red, self.green, self.blue, self.alpha = 255, 255, 255, 255
     self.angle = 0
     self.image = nil

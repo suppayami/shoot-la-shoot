@@ -47,6 +47,9 @@ function Model:moveRateY()
 end
 
 function Model:setSprite(sprite)
+    if self.sprite then
+        self.sprite:dispose()
+    end
     self.sprite = sprite
     self:initSize()
     self:updateSprite()
@@ -72,8 +75,8 @@ end
 
 function Model:updateSpritePosition()
     local sprite = self.sprite
-    sprite.x = self.x + (self.width - sprite:width()) / 2
-    sprite.y = self.y + (self.height - sprite:height()) / 2
+    sprite.x = self.x
+    sprite.y = self.y
 end
 
 function Model:updateCollide()
