@@ -5,6 +5,7 @@ function Sprite:init()
     self.ox, self.oy = 0, 0
     self.zoom_x, self.zoom_y = 1.0, 1.0
     self.red, self.green, self.blue, self.alpha = 255, 255, 255, 255
+    self.toneChange = {}
     self.angle = 0
     self.image = nil
     self.quad  = nil
@@ -91,6 +92,22 @@ function Sprite:unsetImage()
     self.quad  = nil
 end
 
+function Sprite:updateBase(dt)
+    self:updateToneChange(dt)
+end
+
+function Sprite:updateToneChange(dt)
+    if not self.toneChange.r then return end
+    self.red = self.red + math.min(self.toneChange.r, 255 - self.red)
+    self.green = self.green + math.min(self.toneChange.g, 255 - self.green)
+    self.blue = self.blue + math.min(self.toneChange.b, 255 - self.blue)
+    self.alpha = self.alpha + math.min(self.toneChange.a, 255 - self.alpha)
+    --
+    if self.red + self.green + self.blue + self.alpha >= 255 * 4 then
+        self.toneChange = {}
+    end
+end
+
 function Sprite:update(dt)
     -- reserved
 end
@@ -105,4 +122,16 @@ end
 
 function Sprite:dispose()
     LayerManager:removeSprite(self.layer, self.name)
+end
+
+function Sprite:setToneChange(r, g, b, a, f)
+    if self.toneChange.r then return end
+    self.toneChange.r = (self.red - r) / f
+    self.toneChange.g = (self.green - g) / f
+    self.toneChange.b = (self.blue - b) / f
+    self.toneChange.a = (self.alpha - a) / f
+    self.red = r
+    self.green = g
+    self.blue = b
+    self.alpha = a
 end

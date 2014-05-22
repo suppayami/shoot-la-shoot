@@ -3,6 +3,7 @@ LayerManager = class(Object)
 LayerManager.layer  = {}
 LayerManager.sort   = {}
 LayerManager.zLayer = {}
+LayerManager.zValue = {}
 
 function LayerManager:clearAll()
     for k,v in pairs(self.layer) do
@@ -28,6 +29,12 @@ function LayerManager:removeSprite(layer, spriteName)
     if self.layer[layer] == nil then return 0 end
     local l = self.layer[layer]
     if l[spriteName] == nil then return 0 end
+    --
+    local z = self.zLayer[l[spriteName].z]
+    for k,v in pairs(z) do
+        if v == l[spriteName] then z[k] = nil end
+    end
+    --
     l[spriteName]:unsetImage()
     l[spriteName] = nil
 end
@@ -41,13 +48,47 @@ function LayerManager:addSprite(layer, spriteName, spriteClass, ...)
     l[spriteName]       = sprite
     l[spriteName].layer = layer
     l[spriteName].name  = spriteName
-    self.sort[layer]    = sortFunc.sortTable(l, function (a,b) return a.z < b.z end)
+    --
+    local addZ = true
+    for k,v in pairs(self.zValue) do
+        if v == sprite.z then addZ = false end
+    end
+    if addZ then self.zValue[#self.zValue+1] = sprite.z end
+    if addZ then self.zLayer[sprite.z] = {} end
+    --
+    local z = self.zLayer[sprite.z]
+    z[#z+1] = sprite
+    --
+    self.zValue = sortFunc.sortTable(self.zValue, function (a,b) return a < b end)
+    -- self.sort[layer]    = sortFunc.sortTable(l, function (a,b) return a.z < b.z end)
     return l[spriteName]
 end
 
 function LayerManager:sortSprite(layer)
-    local l = self.layer[layer]
-    self.sort[layer] = sortFunc.sortTable(l, function (a,b) return a.z < b.z end)
+    -- local l = self.layer[layer]
+    -- self.zValue = sortFunc.sortTable(self.zValue, function (a,b) return a < b end)
+end
+
+function LayerManager:correctLayer()
+    for k,v in pairs(self.zLayer) do
+        for i,j in pairs(v) do
+            if j.z ~= k then
+                v[i] = nil
+                --
+                local addZ = true
+                for u,x in pairs(self.zValue) do
+                    if x == j.z then addZ = false end
+                end
+                if addZ then self.zValue[#self.zValue+1] = j.z end
+                if addZ then self.zLayer[j.z] = {} end
+                --
+                local z = self.zLayer[j.z]
+                z[#z+1] = j
+                --
+                self.zValue = sortFunc.sortTable(self.zValue, function (a,b) return a < b end)
+            end
+        end
+    end
 end
 
 function LayerManager:draw(layer)
@@ -58,16 +99,24 @@ function LayerManager:draw(layer)
 end
 
 function LayerManager:drawAll()
-    for k,v in pairs(self.layer) do
-        self:draw(k)
+    self:correctLayer()
+    for k,v in pairs(self.zValue) do
+        local layer = self.zLayer[v]
+        for i,s in pairs(layer) do s:draw() end
     end
+    -- for k,v in pairs(self.layer) do
+    --     self:draw(k)
+    -- end
 end
 
 function LayerManager:update(layer, dt)
     if self.layer[layer] == nil then self.layer[layer] = {} end
     --
     local l = self.layer[layer]
-    for i,s in pairs(l) do s:update(dt) end
+    for i,s in pairs(l) do 
+        s:updateBase(dt)
+        s:update(dt)
+    end
 end
 
 function LayerManager:updateAll(dt)

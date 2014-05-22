@@ -21,5 +21,5 @@ function BulletRyukoN:moveRateY()
 end
 
 function BulletRyukoN:applyEffect(target)
-    self.is_damage[target] = 60
+    self.is_damage[target] = 30
 end

@@ -23,6 +23,8 @@ end
 
 function EnemyB:initParams()
     self:enemyInitParams()
+    self.hp    = 100
+    self.mhp   = 100
 end
 
 function EnemyB:spriteClass()
@@ -35,6 +37,10 @@ end
 
 function EnemyB:spriteName()
     return "enemy_b"
+end
+
+function EnemyB:getScore()
+    return 30
 end
 
 function EnemyB:shootDelay()
@@ -94,7 +100,7 @@ function EnemyB:actionAttack()
     if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
-    local y = self.y + self.height / 2 + imageCache:getHeight()
+    local y = self.y
 
     self:createBullet(x, y)
 
@@ -124,6 +130,10 @@ function EnemyB:deathEffect()
     sprite.oy = sprite:width() / 2
 
     sprite:autoDestroy(1)
+end
+
+function EnemyB:getDamage()
+    return 15
 end
 
 -- X-axis:

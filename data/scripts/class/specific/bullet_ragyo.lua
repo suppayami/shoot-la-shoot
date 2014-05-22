@@ -14,23 +14,23 @@ end
 
 function BulletEnemyRagyo:moveRateX()
     if self.target and self.target.shootAngle then
-        return 12 * math.sin(self.flyAngle)
+        return 10 * math.sin(self.flyAngle)
     end
     if self.moveY > 0 then
-        return 12 * math.sin(self.flyAngle)
+        return 10 * math.sin(self.flyAngle)
     else
-        return -12 * math.sin(self.flyAngle)
+        return -10 * math.sin(self.flyAngle)
     end
 end
 
 function BulletEnemyRagyo:moveRateY()
     if self.target and self.target.shootAngle then
-        return 12 * math.cos(self.flyAngle)
+        return -10 * math.cos(self.flyAngle)
     end
     if self.moveY > 0 then
-        return 12 * math.cos(self.flyAngle)
+        return 10 * math.cos(self.flyAngle)
     else
-        return -12 * math.cos(self.flyAngle)
+        return -10 * math.cos(self.flyAngle)
     end
 end
 

@@ -5,8 +5,8 @@ NakedSun.characterUpdateCollide  = NakedSun.super.updateCollide
 
 function NakedSun:initParams()
     NakedSun:characterInitParams()
-    self.hp  = 16
-    self.mhp = 16
+    self.hp  = 300
+    self.mhp = 300
     ---
     self.player = ModelManager:getModel('playerCharacter', 'player')
     self.delay  = 0

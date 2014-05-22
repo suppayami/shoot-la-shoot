@@ -2,6 +2,11 @@ Item = class(Model)
 Item.modelUpdateCollide = Item.super.updateCollide
 Item.modelUpdate = Item.super.update
 
+function Item:initSize()
+    self.width  = self.sprite:width() + 32
+    self.height = self.sprite:height() + 32
+end
+
 function Item:update()
     if self.destroyed then return end
     if self.in_inventory then 

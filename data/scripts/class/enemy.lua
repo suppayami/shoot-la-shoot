@@ -4,6 +4,7 @@ Enemy.characterInit = Enemy.super.init
 
 function Enemy:init()
     self:characterInit(0, 0)
+    self.touch = {}
     self:initSpawn()
 end
 
@@ -13,6 +14,15 @@ end
 
 function Enemy:bulletType()
     return "enemyBullet"
+end
+
+function Enemy:getScore()
+    return 0
+end
+
+function Enemy:afterDeath()
+    if not love.score then love.score = 0 end
+    love.score = love.score + self:getScore()
 end
 
 function Enemy:updateCollide()
@@ -26,8 +36,13 @@ function Enemy:updateCollidePlayer()
     local playerCharacter = ModelManager:getModel('playerCharacter')
     for k,v in pairs(playerCharacter) do
         if self:collided(v) then
-            v:applyDamage(self.hp, true)
-            self:applyDamage(self.hp, true)
+            if not self.touch[v] then self.touch[v] = 0 end
+            if self.touch[v] <= 0 then
+                v:applyDamage(5, true)
+                self:applyDamage(5, true)
+                self.touch[v] = 30
+            end
+            self.touch[v] = self.touch[v] - 1
         end
     end
 end

@@ -31,7 +31,7 @@ function Bullet:init(x, y, user, target, homing)
 end
 
 function Bullet:getDamage()
-    if self.user.damage then 
+    if self.user.getDamage then 
         return self.user:getDamage()
     else
         return 1

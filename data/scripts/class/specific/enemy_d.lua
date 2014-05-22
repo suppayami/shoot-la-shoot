@@ -10,6 +10,8 @@ end
 
 function EnemyD:initParams()
     self:enemyInitParams()
+    self.hp    = 100
+    self.mhp   = 100
 end
 
 function EnemyD:spriteClass()
@@ -30,6 +32,10 @@ end
 
 function EnemyD:moveRateX()
     return 0
+end
+
+function EnemyD:getScore()
+    return 50
 end
 
 function EnemyD:moveRateY()
@@ -57,7 +63,7 @@ function EnemyD:actionShoot()
     if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
-    local y = self.y + self.height / 2 + imageCache:getHeight()
+    local y = self.y
     local player = ModelManager:getModel("playerCharacter", "player")
     self:createBullet(x, y, player, false) 
 end
@@ -75,6 +81,10 @@ function EnemyD:deathEffect()
     sprite.oy = sprite:width() / 2
 
     sprite:autoDestroy(1)
+end
+
+function EnemyD:getDamage()
+    return 15
 end
 
 -- X-axis:

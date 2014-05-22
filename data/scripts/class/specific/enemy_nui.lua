@@ -26,8 +26,8 @@ end
 function EnemyNui:initParams()
     self:enemyInitParams()
     --
-    self.mhp = 1000
-    self.hp  = 1000
+    self.mhp = 2000
+    self.hp  = 2000
 end
 
 function EnemyNui:spriteClass()
@@ -44,6 +44,10 @@ end
 
 function EnemyNui:spriteName()
     return "enemy_nui"
+end
+
+function EnemyNui:getScore()
+    return 1000
 end
 
 function EnemyNui:shootDelay()
@@ -73,6 +77,9 @@ function EnemyNui:moveRateX()
         and self.dashDelay <= 0 and self.dash == 0 then
         self.dash = 1
         self.dashDelay = 120
+        for k,v in pairs(self.touch) do
+            self.touch[k] = 0
+        end
         self.dashDam = {}
         self:initSprite()
     end
@@ -146,7 +153,7 @@ function EnemyNui:actionShoot()
     if self.phase == 1 then
         local imageCache = self:bulletSpriteClass():imageCache()
         local x   = self.x
-        local y   = self.y + self.height / 2 + imageCache:getHeight()
+        local y   = self.y
         local pos = {}
         --
         if self.gunTurn == 0 then
@@ -182,9 +189,10 @@ function EnemyNui:actionAttack()
     if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
-    local y = self.y + self.height / 2 + imageCache:getHeight()
+    local y = self.y
+    local player = ModelManager:getModel("playerCharacter", "player")
 
-    self:createBullet(x, y)
+    self:createBullet(x, y, player, false)
 
     self.bc = self.bc + 1
     self.bd = 12
@@ -216,18 +224,25 @@ function EnemyNui:updateCollidePlayer()
     for k,v in pairs(playerCharacter) do
         if self:collided(v) then
             if not self.touch[v] then self.touch[v] = 0 end
-            if self.dash == 1 and not self.dashDam[v] then
-                v:applyDamage(2, true)
-                self.dashDam[v] = true
-            end
-            if self.dash ~= 1 and self.touch[v] <= 0 then
-                v:applyDamage(2, true)
+            if self.dash == 1 and self.touch[v] <= 0 then
+                v:applyDamage(30, true)
                 self.touch[v] = 30
             end
-            if self.dash ~= 1 then
-                self.touch[v] = self.touch[v] - 1
+            if self.dash ~= 1 and self.touch[v] <= 0 then
+                v:applyDamage(5, true)
+                self:applyDamage(5, true)
+                self.touch[v] = 30
             end
+            self.touch[v] = self.touch[v] - 1
             -- self:applyDamage(self.hp, true)
         end
+    end
+end
+
+function EnemyNui:getDamage()
+    if self.phase == 1 then
+        return 20
+    else
+        return 30
     end
 end

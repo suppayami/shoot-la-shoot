@@ -28,8 +28,10 @@ end
 
 function EnemyRagyo:positionPhase3()
     local pos = {}
+    pos.x = 0
+    pos.y = 0
     --
-    if self.postion == 1 then
+    if self.position == 1 then
         pos.x = 585
         pos.y = 55
     elseif self.position == 2 then
@@ -49,8 +51,12 @@ end
 function EnemyRagyo:initParams()
     self:enemyInitParams()
     --
-    self.mhp = 1000
-    self.hp  = 1000
+    self.mhp = 3000
+    self.hp  = 3000
+end
+
+function EnemyRagyo:getScore()
+    return 1000
 end
 
 function EnemyRagyo:spriteClass()
@@ -71,7 +77,7 @@ end
 
 function EnemyRagyo:shootDelay()
     if self.phase == 1 then
-        return 120
+        return 340
     elseif self.phase == 2 then
         return 60
     elseif self.phase == 3 then
@@ -86,9 +92,15 @@ function EnemyRagyo:moveRateX()
     --
     if self.phase == 3 then
         if self.x < pos.x then
-            return math.min(10, pos.x - self.x)
+            return math.min(8, pos.x - self.x)
         else
-            return math.max(pos.x - self.x, -10)
+            return math.max(pos.x - self.x, -8)
+        end
+    elseif self.phase == 0 then
+        if self.x < love.window.getWidth() / 2 then
+            return math.min(2, love.window.getWidth() / 2 - self.x)
+        else
+            return math.max(-2, love.window.getWidth() / 2 - self.x)
         end
     else
         return 0
@@ -98,17 +110,21 @@ end
 function EnemyRagyo:moveRateY()
     local pos = self:positionPhase3()
     --
-    if self.phase == 0 and self.y == 120 then
+    if self.phase == 0 and self.y == 120 and self.x == love.window.getWidth() / 2 then
         self.phase = 1
     end
     --
     if self.phase == 0 then
-        return math.min(2, 120 - self.y)
+        if self.y < 120 then
+            return math.min(2, 120 - self.y)
+        else
+            return math.max(-2, 120 - self.y)
+        end
     elseif self.phase == 3 then
         if self.y < pos.y then
-            return math.min(10, pos.y - self.y)
+            return math.min(8, pos.y - self.y)
         else
-            return math.max(pos.y - self.y, -10)
+            return math.max(pos.y - self.y, -8)
         end
     else
         return 0
@@ -157,6 +173,7 @@ function EnemyRagyo:throwBombs()
             local name   = "deadeffect_bomb_"..self:spriteName()
             local class  = SpriteEnemyDead
             local sprite = LayerManager:addSprite(layer, name, class)
+            local playerCharacter = ModelManager:getModel('playerCharacter')
 
             sprite.x  = model.x
             sprite.y  = model.y
@@ -165,6 +182,14 @@ function EnemyRagyo:throwBombs()
             sprite.oy = sprite:width() / 2
 
             sprite:autoDestroy(1)
+
+            for k,v in pairs(playerCharacter) do
+                local dist = math.sqrt((v.x - model.x) ^ 2 + (v.y - model.y) ^ 2)
+                if dist <= 120 then
+                    v:applyDamage(self:bombDamage())
+                end
+            end
+
             model:destroy()
         end)
 
@@ -175,15 +200,15 @@ function EnemyRagyo:throwBombs()
 end
 
 function EnemyRagyo:bombDamage()
-    return 2
+    return 80
 end
 
 function EnemyRagyo:shootSun()
     for i=1,8 do
         local angle = math.pi / 4 * (i - 1)
         local imageCache = self:bulletSpriteClass():imageCache()
-        local x = self.x + 60 * math.sin(angle)
-        local y = self.y - 60 * math.cos(angle)
+        local x = self.x
+        local y = self.y
 
         local pos = {}
 
@@ -206,7 +231,7 @@ function EnemyRagyo:actionAttack()
     if self.destroyed then return end
     local imageCache = self:bulletSpriteClass():imageCache()
     local x = self.x
-    local y = self.y + self.height / 2 + imageCache:getHeight()
+    local y = self.y
     local player = ModelManager:getModel("playerCharacter", "player")
 
     self:createBullet(x, y, player, false)
@@ -293,7 +318,7 @@ function EnemyRagyo:updatePhase()
         end
         --
         if self.tempHP - self.hp >= self.mhp / 3 then
-            self.phase = 1
+            self.phase = 0
             self.position = 1
             self:initSprite()
         end
@@ -306,7 +331,10 @@ function EnemyRagyo:updateCollidePlayer()
         if self:collided(v) then
             if not self.touch[v] then self.touch[v] = 0 end
             if self.touch[v] <= 0 then
-                v:applyDamage(2, true)
+                v:applyDamage(5, true)
+                if self.phase > 1 then
+                    self:applyDamage(5, true)
+                end
                 self.touch[v] = 30
             end
             self.touch[v] = self.touch[v] - 1
@@ -315,8 +343,8 @@ function EnemyRagyo:updateCollidePlayer()
 end
 
 function EnemyRagyo:updateCollideBullet()
-    local playerBullter = ModelManager:getModel('playerBullet')
-    for k,v in pairs(playerBullter) do
+    local playerBullet = ModelManager:getModel('playerBullet')
+    for k,v in pairs(playerBullet) do
         if self:collided(v) and self.phase > 1 then
             if not v.is_damage[self] then v.is_damage[self] = 0 end
             if v.is_damage[self] <= 0 then
@@ -325,5 +353,13 @@ function EnemyRagyo:updateCollideBullet()
                 v.is_damage[self] = 30
             end
         end
+    end
+end
+
+function EnemyRagyo:getDamage()
+    if self.phase == 2 then
+        return 15
+    else
+        return 15
     end
 end

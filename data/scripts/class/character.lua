@@ -33,11 +33,21 @@ function Character:applyDamage(damage, pure)
         realDamage = self:calculateDamage(damage) 
     end
     self.hp = self.hp - realDamage
+    if realDamage > 0 then
+        if not self.destroyed then
+            self:damageEffect()
+        end
+    end
     self:checkAlive()
 end
 
 function Character:calculateDamage(damage)
     return damage
+end
+
+function Character:damageEffect()
+    if not self.sprite then return end
+    self.sprite:setToneChange(255, 92, 92, 196, 8)
 end
 
 function Character:checkAlive()
@@ -48,6 +58,11 @@ function Character:checkAlive()
     self:checkAlive()
     if self.life > 0 then return end
     self:destroy(true)
+    self:afterDeath()
+end
+
+function Character:afterDeath()
+    -- none
 end
 
 function Character:lostLife()

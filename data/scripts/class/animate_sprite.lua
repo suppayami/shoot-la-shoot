@@ -36,6 +36,7 @@ function Animation:initAnimation(frames, delay, rows)
     self.tick  = self.animate.delay
     self.row   = 0
     ---
+    self.enable     = true
     self.loop       = 0 -- 0 means NO auto destroy
     self.loop_count = 0
     self.reset      = -1 -- -1 means NO reset row
@@ -74,7 +75,7 @@ function Animation:setFrame()
     self:setQuad(x, y, self.sw, self.sh)
 end
 
-function Animation:reset()
+function Animation:resetAnimation()
     self.tick  = self.animate.delay
     self.frame = 0
     --
@@ -107,6 +108,7 @@ function Animation:update(dt)
 end
 
 function Animation:updateAnimation(dt)
+    if not self.enable then return end
     self.tick = self.tick - 1
     if self.tick <= 0 then
         self.tick  = self.animate.delay
@@ -175,6 +177,10 @@ end
 function Animation:setTimer(frame, callback)
     self.timer     = frame
     self.timerCall = callback
+end
+
+function Animation:setEnable(flag)
+    self.enable = flag
 end
 
 function Animation:updatePosition(dt)

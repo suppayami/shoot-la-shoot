@@ -4,17 +4,17 @@ Ryuko.playerInitParams = Ryuko.super.initParams
 function Ryuko:initParams()
     Ryuko:playerInitParams()
     -- hp and regen
-    self.regen = 1 / 240
-    self.hp    = 10
-    self.mhp   = 10
+    self.regen = 5 / 60
+    self.hp    = 100
+    self.mhp   = 100
     -- power up
     self.powerA = false
     self.powerB = false
 end
 
 function Ryuko:initSize()
-    self.width  = self.sprite:width() - 32
-    self.height = self.sprite:height() - 42
+    self.width  = self.sprite:width() - 64
+    self.height = self.sprite:height() - 96
 end
 
 function Ryuko:spriteClass()
@@ -42,11 +42,7 @@ function Ryuko:moveRateY()
 end
 
 function Ryuko:bulletClass()
-    if self.powerA then
-        return BulletRyukoA -- bullet class for power A
-    else
-        return BulletRyukoN -- bullet class
-    end
+    return BulletRyukoN -- bullet class
 end
 
 function Ryuko:bulletType()
@@ -82,8 +78,8 @@ end
 
 function Ryuko:getDamage()
     if self.powerA then
-        return 2
+        return 20
     else
-        return 1
+        return 10
     end
 end

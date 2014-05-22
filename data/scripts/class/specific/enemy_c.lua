@@ -26,6 +26,8 @@ end
 
 function EnemyC:initParams()
     self:enemyInitParams()
+    self.hp    = 50
+    self.mhp   = 50
 end
 
 function EnemyC:spriteClass()
@@ -38,6 +40,10 @@ end
 
 function EnemyC:spriteName()
     return "enemy_c"
+end
+
+function EnemyC:getScore()
+    return 10
 end
 
 function EnemyC:shootDelay()
