@@ -13,6 +13,16 @@ function LayerManager:clearAll()
         end
         self.layer[k] = nil
     end
+    --
+    for k,v in pairs(self.zValue) do
+        self.zValue[k] = nil
+    end
+    --
+    for k,v in pairs(self.zLayer) do
+        for i,s in pairs(v) do
+            v[i] = nil
+        end
+    end
 end
 
 function LayerManager:clearLayer(layer)
@@ -113,7 +123,7 @@ function LayerManager:update(layer, dt)
     if self.layer[layer] == nil then self.layer[layer] = {} end
     --
     local l = self.layer[layer]
-    for i,s in pairs(l) do 
+    for i,s in pairs(l) do
         s:updateBase(dt)
         s:update(dt)
     end

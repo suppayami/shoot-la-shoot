@@ -24,16 +24,35 @@ function ItemBoostA:applyEffect(player)
     local layer  = self:spriteLayer()
     local name   = "boosteffect"
     local class  = SpriteBoost
-    local sprite = LayerManager:addSprite(layer, name, class, false, player)
+    local cutin  = nil
 
-    sprite.x  = player.x
-    sprite.y  = player.y
-    
-    sprite.ox = sprite:width() / 2
-    sprite.oy = sprite:width() / 2
+    local callback = function()
+        local sprite = LayerManager:addSprite(layer, name, class, false, player)
 
-    sprite:autoDestroy(1)
+        local SE = SoundManager:addSound("Equip Boost.wav")
+        SE:play()
 
-    self:destroy()
-    player.powerA = true
+        sprite.x  = player.x
+        sprite.y  = player.y
+
+        sprite.ox = sprite:width() / 2
+        sprite.oy = sprite:width() / 2
+
+        sprite:autoDestroy(1)
+
+        self:destroy()
+        player.powerA = true
+    end
+
+    if player.powerB then
+        if love.char == 0 then
+            cutin = LayerManager:addSprite(layer, "cutin", CutinRyuko)
+        elseif love.char == 1 then
+            cutin = LayerManager:addSprite(layer, "cutin", CutinSatsuki)
+        end
+
+        cutin.callback = callback
+    else
+        callback()
+    end
 end

@@ -38,6 +38,9 @@ end
 
 function RagyoDevice:initParams()
     self:enemyInitParams()
+    --
+    self.mhp = 150
+    self.hp  = 150
 end
 
 function RagyoDevice:spriteClass()

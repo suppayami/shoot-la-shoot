@@ -51,8 +51,8 @@ end
 function EnemyRagyo:initParams()
     self:enemyInitParams()
     --
-    self.mhp = 3000
-    self.hp  = 3000
+    self.mhp = 3200
+    self.hp  = 3200
 end
 
 function EnemyRagyo:getScore()
@@ -177,7 +177,7 @@ function EnemyRagyo:throwBombs()
 
             sprite.x  = model.x
             sprite.y  = model.y
-            
+
             sprite.ox = sprite:width() / 2
             sprite.oy = sprite:width() / 2
 
@@ -258,14 +258,18 @@ function EnemyRagyo:deathEffect()
     local name   = "deadeffect"..self:spriteName()
     local class  = SpriteRagyoDead
     local sprite = LayerManager:addSprite(layer, name, class)
+    local deathSE = SoundManager:addSound("Player Death.wav")
 
     sprite.x  = self.x
     sprite.y  = self.y
-    
+
     sprite.ox = sprite:width() / 2
     sprite.oy = sprite:width() / 2
 
     sprite:autoDestroy(1)
+    deathSE:play()
+
+    love.preUnlocked = true
 end
 
 function EnemyRagyo:update()

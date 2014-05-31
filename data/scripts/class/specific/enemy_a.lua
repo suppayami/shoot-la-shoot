@@ -84,6 +84,7 @@ function EnemyA:deathEffect()
     local name   = "deadeffect"..self:spriteName()
     local class  = SpriteEnemyDead
     local sprite = LayerManager:addSprite(layer, name, class)
+    local deathSE = SoundManager:addSound("Enemy Death.wav")
 
     sprite.x  = self.x
     sprite.y  = self.y
@@ -92,6 +93,7 @@ function EnemyA:deathEffect()
     sprite.oy = sprite:width() / 2
 
     sprite:autoDestroy(1)
+    deathSE:play()
 end
 
 function EnemyA:getDamage()

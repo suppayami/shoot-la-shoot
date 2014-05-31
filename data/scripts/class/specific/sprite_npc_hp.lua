@@ -25,8 +25,8 @@ function SpriteNPCHP:updateQuad()
 end
 
 function SpriteNPCHP:updatePosition()
-    self.x = 153
-    self.y = 611
+    self.x = 152
+    self.y = 610
 end
 
 function SpriteNPCHP:update(dt)

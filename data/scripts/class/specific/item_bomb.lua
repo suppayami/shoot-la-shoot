@@ -11,12 +11,15 @@ function ItemBomb:throwTo(x, y)
     else
         self.flyAngle = math.pi / 2
     end
+    self.delayCollide = 16
 end
 
 function ItemBomb:moveRateX()
     if self.x == self.toX and self.y == self.toY then
         self.throw = false
+        self.delayCollide = 0
     end
+    self.delayCollide = self.delayCollide - 1
     if self.throw then
         if self.moveY > 0 then
             if math.sin(self.flyAngle) > 0 then
@@ -72,26 +75,34 @@ function ItemBomb:spriteName()
 end
 
 function ItemBomb:collideEffect(player)
-    player:addItem(self)
+    if self.delayCollide <= 0 then
+        player:addItem(self)
+    end
 end
 
 function ItemBomb:applyEffect(player)
     local layer  = self:spriteLayer()
     local name   = "bombeffect"
     local class  = SpriteBomb
-    local sprite = LayerManager:addSprite(layer, name, class, true)
+    local cutin  = nil
 
-    sprite.x = 0
-    sprite.y = 440
+    if love.char == 0 then
+        cutin = LayerManager:addSprite(layer, "cutin", CutinBombRyuko)
+    elseif love.char == 1 then
+        cutin = LayerManager:addSprite(layer, "cutin", CutinBombSatsuki)
+    end
 
-    sprite:frameCallback(3, function()
-        local layer  = self:spriteLayer()
-        local name   = "boosteffect"
-        local class  = SpriteBomb
+    cutin.callback = function()
         local sprite = LayerManager:addSprite(layer, name, class, true)
 
+        local useSE = SoundManager:addSound("Using Bomb.wav")
+        useSE:play()
+
         sprite.x = 0
-        sprite.y = 320
+        sprite.y = 440
+
+        local explosionSE = SoundManager:addSound("Bomb Explosion.mp3")
+        explosionSE:play()
 
         sprite:frameCallback(3, function()
             local layer  = self:spriteLayer()
@@ -99,8 +110,11 @@ function ItemBomb:applyEffect(player)
             local class  = SpriteBomb
             local sprite = LayerManager:addSprite(layer, name, class, true)
 
+            local explosionSE = SoundManager:addSound("Bomb Explosion.mp3")
+            explosionSE:play()
+
             sprite.x = 0
-            sprite.y = 200
+            sprite.y = 320
 
             sprite:frameCallback(3, function()
                 local layer  = self:spriteLayer()
@@ -108,8 +122,11 @@ function ItemBomb:applyEffect(player)
                 local class  = SpriteBomb
                 local sprite = LayerManager:addSprite(layer, name, class, true)
 
+                local explosionSE = SoundManager:addSound("Bomb Explosion.mp3")
+                explosionSE:play()
+
                 sprite.x = 0
-                sprite.y = 80
+                sprite.y = 200
 
                 sprite:frameCallback(3, function()
                     local layer  = self:spriteLayer()
@@ -117,8 +134,26 @@ function ItemBomb:applyEffect(player)
                     local class  = SpriteBomb
                     local sprite = LayerManager:addSprite(layer, name, class, true)
 
+                    local explosionSE = SoundManager:addSound("Bomb Explosion.mp3")
+                    explosionSE:play()
+
                     sprite.x = 0
-                    sprite.y = -40
+                    sprite.y = 80
+
+                    sprite:frameCallback(3, function()
+                        local layer  = self:spriteLayer()
+                        local name   = "boosteffect"
+                        local class  = SpriteBomb
+                        local sprite = LayerManager:addSprite(layer, name, class, true)
+
+                        local explosionSE = SoundManager:addSound("Bomb Explosion.mp3")
+                        explosionSE:play()
+
+                        sprite.x = 0
+                        sprite.y = -40
+
+                        sprite:autoDestroy(1)
+                    end)
 
                     sprite:autoDestroy(1)
                 end)
@@ -129,15 +164,14 @@ function ItemBomb:applyEffect(player)
             sprite:autoDestroy(1)
         end)
 
-        sprite:autoDestroy(1)
-    end)
+        local enemies = ModelManager:getModel("enemyCharacter")
+        for k,v in pairs(enemies) do
+            v:applyDamage(300, false)
+        end
 
-    local enemies = ModelManager:getModel("enemyCharacter")
-    for k,v in pairs(enemies) do
-        v:applyDamage(1, false)
+        sprite:autoDestroy(1)
+
+        self:destroy()
     end
 
-    sprite:autoDestroy(1)
-
-    self:destroy()
 end

@@ -6,6 +6,7 @@ function Sprite:init()
     self.zoom_x, self.zoom_y = 1.0, 1.0
     self.red, self.green, self.blue, self.alpha = 255, 255, 255, 255
     self.toneChange = {}
+    self.fadeChange = {}
     self.angle = 0
     self.image = nil
     self.quad  = nil
@@ -47,12 +48,12 @@ end
 
 function Sprite:quadX()
     local x, y, w, h = self.quad:getViewport()
-    return x 
+    return x
 end
 
 function Sprite:quadY()
     local x, y, w, h = self.quad:getViewport()
-    return y 
+    return y
 end
 
 function Sprite:realZoomX()
@@ -76,12 +77,13 @@ function Sprite:draw()
         love.graphics.setShader(self.shader)
         love.graphics.setBlendMode(self.blendMode)
         love.graphics.setColor(self.red, self.green, self.blue, self.alpha)
-        love.graphics.draw(self.image, self.quad, self.x, self.y, self.angle, 
+        love.graphics.draw(self.image, self.quad, self.x, self.y, self.angle,
             self:realZoomX(), self:realZoomY(), self.ox, self.oy)
     end
 end
 
 function Sprite:setImage(image)
+    if not image then return end
     local iw, ih = image:getWidth(), image:getHeight()
     self.image = image
     self.quad  = love.graphics.newQuad(0, 0, iw, ih, iw, ih)
@@ -94,6 +96,7 @@ end
 
 function Sprite:updateBase(dt)
     self:updateToneChange(dt)
+    self:updateFadeChange(dt)
 end
 
 function Sprite:updateToneChange(dt)
@@ -105,6 +108,34 @@ function Sprite:updateToneChange(dt)
     --
     if self.red + self.green + self.blue + self.alpha >= 255 * 4 then
         self.toneChange = {}
+    end
+end
+
+function Sprite:updateFadeChange(dt)
+    if not self.fadeChange.r then return end
+    if self.fadeChange.r > 0 then
+        self.red = self.red - math.min(self.fadeChange.r, -self.fadeChange.toR + self.red)
+    else
+        self.red = self.red - math.max(self.fadeChange.r, -self.fadeChange.toR + self.red)
+    end
+    if self.fadeChange.g > 0 then
+        self.green = self.green - math.min(self.fadeChange.g, -self.fadeChange.toG + self.green)
+    else
+        self.green = self.green - math.max(self.fadeChange.g, -self.fadeChange.toG + self.green)
+    end
+    if self.fadeChange.b > 0 then
+        self.blue = self.blue - math.min(self.fadeChange.b, -self.fadeChange.toB + self.blue)
+    else
+        self.blue = self.blue - math.max(self.fadeChange.b, -self.fadeChange.toB + self.blue)
+    end
+    if self.fadeChange.a > 0 then
+        self.alpha = self.alpha - math.min(self.fadeChange.a, -self.fadeChange.toA + self.alpha)
+    else
+        self.alpha = self.alpha - math.max(self.fadeChange.a, -self.fadeChange.toA + self.alpha)
+    end
+    --
+    if self.red == self.fadeChange.toR and self.green == self.fadeChange.toG and self.blue == self.fadeChange.toB and self.alpha == self.fadeChange.toA then
+        self.fadeChange = {}
     end
 end
 
@@ -134,4 +165,17 @@ function Sprite:setToneChange(r, g, b, a, f)
     self.green = g
     self.blue = b
     self.alpha = a
+end
+
+function Sprite:setFade(r, g, b, a, f)
+    if self.fadeChange.r then return end
+    self.toneChange = {}
+    self.fadeChange.r = (self.red - r) / f
+    self.fadeChange.g = (self.green - g) / f
+    self.fadeChange.b = (self.blue - b) / f
+    self.fadeChange.a = (self.alpha - a) / f
+    self.fadeChange.toR = r
+    self.fadeChange.toG = g
+    self.fadeChange.toB = b
+    self.fadeChange.toA = a
 end

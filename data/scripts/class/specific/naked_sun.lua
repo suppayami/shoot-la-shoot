@@ -17,6 +17,8 @@ function NakedSun:initParams()
     -- dirty slow
     self.slowRate     = 0
     self.slowDuration = 0
+    --
+    self:setCollisionMask("Naked Sun Collision Mask.png")
 end
 
 function NakedSun:spriteClass()
@@ -117,4 +119,22 @@ function NakedSun:updateCollideBullet()
             end
         end
     end
+end
+
+function NakedSun:deathEffect()
+    local layer  = self:spriteLayer()
+    local name   = "deadeffect"..self:spriteName()
+    local class  = SpritePlayerDead
+    local sprite = LayerManager:addSprite(layer, name, class)
+
+    local SE = SoundManager:addSound("Naked Sun Death [freesfx.co.uk].mp3")
+    SE:play()
+
+    sprite.x  = self.x
+    sprite.y  = self.y
+
+    sprite.ox = sprite:width() / 2
+    sprite.oy = sprite:width() / 2
+
+    sprite:autoDestroy(1)
 end

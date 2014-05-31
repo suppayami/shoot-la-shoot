@@ -13,8 +13,10 @@ function Ryuko:initParams()
 end
 
 function Ryuko:initSize()
-    self.width  = self.sprite:width() - 64
-    self.height = self.sprite:height() - 96
+    self.width  = self.sprite:width()
+    self.height = self.sprite:height()
+    --
+    self:setCollisionMask("Ryuko Collision Mask.png")
 end
 
 function Ryuko:spriteClass()
@@ -61,14 +63,38 @@ function Ryuko:actionShoot()
     local x4 = x2 + 20
     local y  = self.y - self.sprite:height() / 2 - imageCache:getHeight() + 12
 
-    self:createBullet(x1, y)
-    self:createBullet(x2, y)
-    if self.powerB then
-        local b1 = self:createBullet(x3, y)
-        local b2 = self:createBullet(x4, y)
-        b1.sprite.angle = - math.pi / 4 + math.pi / 8
-        b2.sprite.angle = math.pi / 4 - math.pi / 8
+    local shootSE = love.audio.newSource("sounds/Ryuko Shoot.wav", "stream")
+
+    local b1 = self:createBullet(x1, y)
+    local b2 = self:createBullet(x2, y)
+
+    if self.powerA then
+        b1.sprite.red = 203
+        b1.sprite.green = 192
+        b1.sprite.blue = 245
+        b2.sprite.red = 203
+        b2.sprite.green = 192
+        b2.sprite.blue = 245
     end
+
+    if self.powerB then
+        local b3 = self:createBullet(x3, y)
+        local b4 = self:createBullet(x4, y)
+        b3.sprite.angle = - math.pi / 4 + math.pi / 8
+        b4.sprite.angle = math.pi / 4 - math.pi / 8
+
+        if self.powerA then
+            b3.sprite.red = 203
+            b3.sprite.green = 192
+            b3.sprite.blue = 245
+            b4.sprite.red = 203
+            b4.sprite.green = 192
+            b4.sprite.blue = 245
+        end
+    end
+
+    shootSE:setVolume(0.5)
+    shootSE:play()
 end
 
 function Ryuko:lostLife()
@@ -78,7 +104,7 @@ end
 
 function Ryuko:getDamage()
     if self.powerA then
-        return 20
+        return 15
     else
         return 10
     end

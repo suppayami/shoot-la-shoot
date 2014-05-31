@@ -26,8 +26,8 @@ end
 function EnemyNui:initParams()
     self:enemyInitParams()
     --
-    self.mhp = 2000
-    self.hp  = 2000
+    self.mhp = 2500
+    self.hp  = 2500
 end
 
 function EnemyNui:spriteClass()
@@ -73,7 +73,7 @@ function EnemyNui:moveRateX()
         self.dashDelay = self.dashDelay - 1
     end
     --
-    if self.phase == 2 and (self.x >= player.x - 36 and self.x <= player.x + 36) 
+    if self.phase == 2 and (self.x >= player.x - 36 and self.x <= player.x + 36)
         and self.dashDelay <= 0 and self.dash == 0 then
         self.dash = 1
         self.dashDelay = 120
@@ -86,9 +86,9 @@ function EnemyNui:moveRateX()
     --
     if self.b >= math.pi * 2 then
         self.b = self.b - math.pi * 2
-        if self.phase == 1 then 
+        if self.phase == 1 then
             self.dashDelay = 120
-            self.phase = 2 
+            self.phase = 2
         elseif self.phase == 2 then
             self.phase = 1
         end
@@ -108,7 +108,7 @@ function EnemyNui:moveRateY()
         self.phase = 1
     end
     --
-    if self.phase > 0 and self.dash == 1 
+    if self.phase > 0 and self.dash == 1
         and self.y >= (love.window.getHeight() - self.height / 2) then
         self.dash = 2
         self:initSprite()
@@ -172,7 +172,7 @@ function EnemyNui:actionShoot()
         pos.y = self.y + 100 * math.cos(self.gunAngle * math.pi / 180)
         pos.shootAngle = self.gunAngle * math.pi / 180
         --
-        self:createBullet(x, y, pos, false) 
+        self:createBullet(x, y, pos, false)
     elseif self.phase == 2 then
         self.attack = true
     end
@@ -209,14 +209,16 @@ function EnemyNui:deathEffect()
     local name   = "deadeffect"..self:spriteName()
     local class  = SpriteNuiDead
     local sprite = LayerManager:addSprite(layer, name, class)
+    local deathSE = SoundManager:addSound("Player Death.wav")
 
     sprite.x  = self.x
     sprite.y  = self.y
-    
+
     sprite.ox = sprite:width() / 2
     sprite.oy = sprite:width() / 2
 
     sprite:autoDestroy(1)
+    deathSE:play()
 end
 
 function EnemyNui:updateCollidePlayer()
@@ -226,12 +228,12 @@ function EnemyNui:updateCollidePlayer()
             if not self.touch[v] then self.touch[v] = 0 end
             if self.dash == 1 and self.touch[v] <= 0 then
                 v:applyDamage(30, true)
-                self.touch[v] = 30
+                self.touch[v] = 40
             end
             if self.dash ~= 1 and self.touch[v] <= 0 then
                 v:applyDamage(5, true)
                 self:applyDamage(5, true)
-                self.touch[v] = 30
+                self.touch[v] = 40
             end
             self.touch[v] = self.touch[v] - 1
             -- self:applyDamage(self.hp, true)
@@ -241,8 +243,8 @@ end
 
 function EnemyNui:getDamage()
     if self.phase == 1 then
-        return 20
-    else
         return 30
+    else
+        return 35
     end
 end

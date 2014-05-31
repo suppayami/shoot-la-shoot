@@ -13,6 +13,8 @@ function Player:initParams()
     self.slowDuration = 0
     -- life
     self.life = 3
+    --
+    self.nearDeathSE = love.audio.newSource("sounds/Near Death.wav", "stream")
 end
 
 function Player:bulletType()
@@ -21,8 +23,30 @@ end
 
 function Player:update()
     self:characterUpdate()
-    if self.destroyed then return end
+    if self.destroyed then
+        self.nearDeathSE:stop()
+        return
+    end
     self:updateItem()
+    self:updateSE()
+end
+
+function Player:updateSE()
+    if self.destroyed then
+        self.nearDeathSE:stop()
+        return
+    end
+    if self.life > 1 then
+        self.nearDeathSE:stop()
+    end
+    if self.life == 1 then
+        if self.hp / self.mhp > 0.25 then
+            self.nearDeathSE:stop()
+        else
+            self.nearDeathSE:setLooping(true)
+            self.nearDeathSE:play()
+        end
+    end
 end
 
 function Player:updateMove()
@@ -82,6 +106,8 @@ function Player:addItem(item)
         item1:destroy()
     end
     --
+    local SE = SoundManager:addSound("Pick-up.wav")
+    SE:play()
 end
 
 function Player:shootCondition()
@@ -99,7 +125,7 @@ end
 function Player:updateCollideBullet()
     local enemyBullet = ModelManager:getModel('enemyBullet')
     for k,v in pairs(enemyBullet) do
-        if self:collided(v) then
+        if self:collided(v) and v:collided(self) then
             if not v.is_damage[self] then v.is_damage[self] = 0 end
             if v.is_damage[self] <= 0 then
                 v:applyEffect(self)
@@ -110,15 +136,27 @@ function Player:updateCollideBullet()
     end
 end
 
+function Player:damageEffect()
+    local hud = LayerManager:getSprite("scene", "base")
+    if not self.sprite then return end
+    self.sprite:setToneChange(255, 92, 92, 196, 8)
+    if hud.setHurt then hud:setHurt() end
+end
+
 function Player:deathEffect()
     local layer  = self:spriteLayer()
     local name   = "deadeffect"..self:spriteName()
     local class  = SpritePlayerDead
     local sprite = LayerManager:addSprite(layer, name, class)
 
+    local SE = SoundManager:addSound("Player Death.wav")
+    SE:play()
+
+    self.nearDeathSE:stop()
+
     sprite.x  = self.x
     sprite.y  = self.y
-    
+
     sprite.ox = sprite:width() / 2
     sprite.oy = sprite:width() / 2
 

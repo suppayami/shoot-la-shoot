@@ -27,10 +27,10 @@ end
 
 function Character:applyDamage(damage, pure)
     local realDamage = 0
-    if pure then 
-        realDamage = damage 
-    else 
-        realDamage = self:calculateDamage(damage) 
+    if pure then
+        realDamage = damage
+    else
+        realDamage = self:calculateDamage(damage)
     end
     self.hp = self.hp - realDamage
     if realDamage > 0 then
@@ -57,6 +57,7 @@ function Character:checkAlive()
     self.hp   = self.mhp + self.hp
     self:checkAlive()
     if self.life > 0 then return end
+    self.hp   = 0
     self:destroy(true)
     self:afterDeath()
 end
